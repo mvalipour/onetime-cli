@@ -1,0 +1,34 @@
+{
+  "name": "onetime-cli",
+  "version": "1.0.0",
+  "description": "one-time timesheet management command line interfaec",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mvalipour/onetime-cli"
+  },
+  "keywords": [
+    "timesheet",
+    "targetprocess",
+    "harvest"
+  ],
+  "author": "Mo Valipour <valipour@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mvalipour/onetime-cli/issues"
+  },
+  "homepage": "https://github.com/mvalipour/onetime-cli",
+  "bin": {
+    "onetime": "src/index.js"
+  },
+  "dependencies": {
+    "configstore": "^1.2.0",
+    "harvest": "^0.1.0",
+    "inquirer": "^0.8.5",
+    "minimist": "^1.1.1",
+    "tp-api": "^1.0.5"
+  }
+}
