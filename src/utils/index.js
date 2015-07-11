@@ -1,3 +1,5 @@
+var chalk = require('chalk');
+
 function bracetize(v) {
     while(v.length < 12) v += ' ';
     return '['+v.substring(0, 12)+']';
@@ -9,7 +11,12 @@ log.err = function () {
     console.log.apply(this, args);
 };
 
+log.chalk = function (c) {
+    var args = Array.prototype.slice.call(arguments).splice(1);
+    console.log.call(this, chalk[c](args.join(' ')));
+};
+
 module.exports = {
-    log: console.log,
+    log: log,
     bracetize: bracetize
 };
