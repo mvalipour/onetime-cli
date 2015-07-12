@@ -7,7 +7,7 @@ function bracetize(v) {
 
 var log = console.log;
 log.err = function () {
-    var args = ['[ERR!]'].concat(Array.prototype.slice.call(arguments));
+    var args = [chalk.red('[ERR!]')].concat(Array.prototype.slice.call(arguments));
     console.log.apply(this, args);
 };
 

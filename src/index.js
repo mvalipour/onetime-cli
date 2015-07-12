@@ -1,4 +1,6 @@
 #! /usr/bin/env node
+require('./utils/_ext');
+
 var minimist = require('minimist');
 var utils = require('./utils');
 var config = require('./utils/config');
