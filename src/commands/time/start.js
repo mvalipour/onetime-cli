@@ -70,10 +70,14 @@ var buildFields = function (args, data) {
             when: !args.tp,
             filter: function (i) {
                 if(!i) return i;
-                return ['', 'User story: #' + tpTask.UserStory.Id + ' - ' + tpTask.UserStory.Name,
-                'Task: #' + tpTask.Id + ' - ' + tpTask.Name
+                return ['', '> user_story #' + tpTask.UserStory.Id + ' ' + tpTask.UserStory.Name,
+                '> task #' + tpTask.Id + ' ' + tpTask.Name
             ].join('\n');
             }
+        },
+        {
+            name: 'notes',
+            message: 'Notes:'
         },
         {
             name: 'hours',
@@ -102,7 +106,7 @@ var buildFields = function (args, data) {
 
 function create(data) {
     var opts = {
-        notes: data.tp,
+        notes: data.tp + (data.notes ? '\n' + data.notes : ''),
         hours: data.hours || 0,
         project_id: data.project,
         task_id: data.task,
