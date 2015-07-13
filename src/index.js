@@ -3,7 +3,7 @@ require('./utils/_ext');
 
 var minimist = require('minimist');
 var utils = require('./utils');
-var config = require('./utils/config');
+var config = require('./config');
 
 var commands = require('./commands');
 

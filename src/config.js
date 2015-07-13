@@ -1,5 +1,5 @@
 var Configstore = require('configstore');
-var pkg = require('../../package.json');
+var pkg = require('../package.json');
 
 var store = new Configstore(pkg.name);
 module.exports = {

@@ -1,8 +1,8 @@
 var extend = require('util')._extend;
 var utils = require('../../utils');
 var inquirer = require('inquirer');
-var harvest = require('../../utils/harvest');
-var tp = require('../../utils/tp');
+var harvest = require('../../api/harvest')();
+var tp = require('../../api/tp')();
 
 function validateNumber(required, done) {
     return function (i) {
@@ -54,16 +54,12 @@ var buildFields = function (args, data) {
             name: 'tp',
             validate: validateNumber(false, function (i) {
                 var done = this.async();
-                tp('Tasks')
-                .where('ID eq ' + i)
-                .then(function (err, tasks) {
-                    if(err) {
-                        return done('An error occured while fetching task from target process.' + err);
-                    }
-
-                    if(tasks.length !== 1) return done('Given task could not be found on target process.');
-                    tpTask = tasks[0];
+                tp.getTask(i)
+                .then(function (task) {
+                    tpTask = task;
                     done(true);
+                }, function (err) {
+                    done('An error occured while fetching task from target process.' + err);
                 });
             }),
             message: 'Any target process task?',

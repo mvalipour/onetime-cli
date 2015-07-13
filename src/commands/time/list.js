@@ -1,5 +1,5 @@
 var utils = require('../../utils');
-var harvest = require('../../utils/harvest');
+var harvest = require('../../api/harvest')();
 
 module.exports = {
     $t: true,

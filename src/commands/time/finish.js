@@ -1,5 +1,5 @@
 var utils = require('../../utils');
-var harvest = require('../../api/harvest')();
+var harvest = require('../../api/harvest');
 
 module.exports = {
     $t: true,
@@ -13,6 +13,11 @@ module.exports = {
             harvest.TimeTracking.toggleTimer({ id: e.id }, function (err) {
                 if(err) return utils.log.err(err);
                 utils.log('Your timer is paused.');
+
+                var tpdata = {};
+                tp.get('Times').create(tpdata, function (err, res) {
+                    if(err) return utils.log.err(err);
+                });
             });
         });
     }

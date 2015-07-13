@@ -1,6 +1,6 @@
 var inquirer = require('inquirer');
 var utils = require('../utils');
-var config = require('../utils/config');
+var config = require('../config');
 
 function required(i) {
     return !!i;

@@ -7,6 +7,7 @@ module.exports.setup = function (load) {
                 return load(m);
             }
             catch (e) {
+                console.log(e);
                 if (e instanceof Error && e.code === "MODULE_NOT_FOUND")
                     utils.log.err('Could not find command `'+m+'`');
                 else throw e;

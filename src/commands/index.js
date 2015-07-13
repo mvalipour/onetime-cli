@@ -1,6 +1,6 @@
 var command = require('../utils/command');
 var utils = require('../utils');
-var config = require('../utils/config');
+var config = require('../config');
 
 module.exports = command.setup(function (m) {
     if(m !== 'init' && !config.get('_initialized')){
