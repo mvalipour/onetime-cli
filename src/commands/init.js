@@ -37,16 +37,29 @@ function store(d, res) {
     config.set(d + '_password', res.password);
 }
 
-module.exports = {
-    $t: true,
-    _: function () {
-        prompt('Target Process', function (tp) {
-            prompt('Harvest', function (harvest) {
-                store('tp', tp);
-                store('harvest', harvest);
-                config.set('_initialized', true);
-                utils.log('onetime was initialized successfully.');
-            });
+
+var apps = {
+    harvest: function () {
+        prompt('Harvest', function (opts) {
+            store('harvest', opts);
+            config.set('_initialized', true);
+            utils.log('harvest is configured successfully.');
+        });
+    },
+    tp: function () {
+        prompt('Target Process', function (opts) {
+            store('tp', opts);
+            utils.log('target process is configured successfully.');
         });
     }
 };
+
+var command = require('../utils/command');
+module.exports = command.setup(function (m) {
+    if(m !== 'harvest') {
+        config.ensure();
+    }
+
+    var a = apps[m];
+    return a ? { $t : true, _: a } : null;
+});

@@ -96,6 +96,5 @@ var TargetProcess = (function() {
 module.exports = function () {
     var config = require('../config');
     var settings = config.readDomain('tp', ['domain', 'email', 'password']);
-
-    return new TargetProcess(settings);
+    return settings ? new TargetProcess(settings) : null;
 };

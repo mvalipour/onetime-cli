@@ -2,7 +2,7 @@ var extend = require('util')._extend;
 var utils = require('../../utils');
 var inquirer = require('inquirer');
 var harvest = require('../../api/harvest')();
-var tp = require('../../api/tp')();
+var tpClient = require('../../api/tp')();
 
 function validateNumber(required, done) {
     return function (i) {
@@ -54,7 +54,7 @@ var buildFields = function (args, data) {
             name: 'tp',
             validate: validateNumber(false, function (i) {
                 var done = this.async();
-                tp.getTask(i)
+                tpClient.getTask(i)
                 .then(function (task) {
                     tpTask = task;
                     done(true);
@@ -63,7 +63,7 @@ var buildFields = function (args, data) {
                 });
             }),
             message: 'Any target process task?',
-            when: !args.tp,
+            when: !!tpClient && !args.tp,
             filter: function (i) {
                 if(!i) return i;
                 return ['', '> user_story #' + tpTask.UserStory.Id + ' ' + tpTask.UserStory.Name,
