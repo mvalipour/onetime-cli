@@ -4,10 +4,15 @@ var inquirer = require('inquirer');
 var harvest = require('../../api/harvest')();
 var tpClient = require('../../api/tp')();
 var base = require('./_base');
+var aliasStore = require('./alias/_store');
 
 function buildOtherQuestions(args, data) {
     var hours = 0;
     return [
+        {
+            name: 'notes',
+            message: 'Notes:'
+        },
         {
             name: 'hours',
             validate: base.validation.float(false),
@@ -29,10 +34,6 @@ function buildOtherQuestions(args, data) {
             type: 'confirm',
             name: 'confirm',
             message: 'Are you happy with your selection?'
-        },
-        {
-            name: 'notes',
-            message: 'Notes:'
         }
     ];
 }
@@ -62,16 +63,28 @@ function create(data) {
     });
 }
 
+function start(args) {
+    base.captureNewTime(args, tpClient, function (result) {
+        inquirer.prompt(buildOtherQuestions(args, result), function (r2) {
+            extend(result, r2);
+            if(!result.confirm) return;
+            create(extend(result, args));
+        });
+    });
+}
+
 module.exports = {
     $t: true,
     _: function (args) {
-        base.captureNewTime(args, tpClient, function (result) {
-            inquirer.prompt(buildOtherQuestions(args, result), function (r2) {
-                extend(result, r2);
-                if(!result.confirm) return;
-                create(extend(result, args));
+        var alias = args.a || args.alias;
+        if(alias){
+            aliasStore.get(alias, function (data) {
+                extend(args, data);
+                start(args);
             });
-        });
-
+        }
+        else {
+            start(args);
+        }
     }
 };

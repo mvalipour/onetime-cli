@@ -41,6 +41,17 @@ function list(done) {
     _read(done);
 }
 
+function get(name, done) {
+    _read(function (data) {
+        var a = data[name];
+        if(!a) {
+            return utils.log.err('Alias `'+name+'` doesnot exist.');
+        }
+
+        done(a);
+    });
+}
+
 function add(name, opts, done) {
     _change(function (data) {
         if(!!data[name]) {
@@ -55,7 +66,7 @@ function add(name, opts, done) {
 function remove(name, done) {
     _change(function (data) {
         if(!data[name]) {
-            done('Alias `'+name+'` does not exist.');
+            done('Alias `'+name+'` doesnot exist.');
         }
 
         delete data[name];
@@ -66,5 +77,6 @@ function remove(name, done) {
 module.exports = {
     add: add,
     list: list,
+    get: get,
     remove: remove
 };
