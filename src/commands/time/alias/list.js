@@ -6,7 +6,9 @@ var store = require('./_store');
 module.exports = {
     $t: true,
     _: function (args) {
-        store.list(function (data) {
+        store.list(function (err, data) {
+            if(err) return utils.log.err(err);
+
             utils.log();
             for (var n in data) {
                 utils.log('    ' + n);

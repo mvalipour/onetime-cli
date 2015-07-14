@@ -17,9 +17,14 @@ module.exports = {
         inquirer.prompt(questions, function (data) {
             name = name || data.name;
 
-            base.captureNewTime(args, null, function (res) {
-                store.add(name, res, function (err) {
-                    if(err) return utils.log.err(err);
+            store.exists(name, function (err, e) {
+                if(err) return utils.log.err(err);
+                if(e) return utils.log.err('Alias `'+name+'` already exists.');
+
+                base.captureNewTime(args, null, function (res) {
+                    store.add(name, res, function (err) {
+                        if(err) return utils.log.err(err);
+                    });
                 });
             });
         });

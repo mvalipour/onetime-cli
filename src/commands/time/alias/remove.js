@@ -7,8 +7,13 @@ module.exports = {
     $t: true,
     _: function (args) {
         var name = args._[0];
-        store.remove(name, function (err) {
+        store.exists(name, function (err, e) {
             if(err) return utils.log.err(err);
+            if(!e) return utils.log.err('Alias `'+name+'` doesnot exist.');
+
+            store.remove(name, function (err) {
+                if(err) return utils.log.err(err);
+            });
         });
     }
 };

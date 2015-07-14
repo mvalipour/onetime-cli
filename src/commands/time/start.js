@@ -78,7 +78,8 @@ module.exports = {
     _: function (args) {
         var alias = args.a || args.alias;
         if(alias){
-            aliasStore.get(alias, function (data) {
+            aliasStore.get(alias, function (err, data) {
+                if(err) return utils.log.err(err);
                 extend(args, data);
                 start(args);
             });
