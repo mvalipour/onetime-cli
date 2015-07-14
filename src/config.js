@@ -1,10 +1,19 @@
 var Configstore = require('configstore');
 var pkg = require('../package.json');
 var utils = require('./utils');
+var fs = require('fs');
 
 var store = new Configstore(pkg.name);
 
+var appdata = process.env.APPDATA || (process.platform == 'darwin' ? process.env.HOME + '/Library/Application Support' : '/var/local');
+appdata += '/' + pkg.name;
+
+if (!fs.existsSync(appdata)){
+    fs.mkdirSync(appdata);
+}
+
 module.exports = {
+    appdata: appdata,
     get: function (k) {
         return store.get(k);
     },

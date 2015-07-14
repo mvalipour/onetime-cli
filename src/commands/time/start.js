@@ -3,81 +3,14 @@ var utils = require('../../utils');
 var inquirer = require('inquirer');
 var harvest = require('../../api/harvest')();
 var tpClient = require('../../api/tp')();
+var base = require('./_base');
 
-function validateNumber(required, done) {
-    return function (i) {
-        if(!i && !required) return true;
-        var res = /^\d+$/.test(i);
-        if(!res) return 'Please enter a valid number.';
-        return done ? done.call(this, i) : true;
-    };
-}
-
-function validateFloat(required) {
-    return function (i) {
-        if(!i && !required) return true;
-        return parseFloat(i) ? true : 'Please enter a valid number.';
-    };
-}
-
-var buildFields = function (args, data) {
-    var projects = data.projects.map(function (p) {
-        return { name: p.name, value: p.id};
-    });
-
-    var tpTask,
-        hours = args.hours;
-
+function buildOtherQuestions(args, data) {
+    var hours = 0;
     return [
         {
-            type: 'list',
-            name: 'project',
-            choices: projects,
-            message: 'Which project?',
-            when: !args.project
-        },
-        {
-            type: 'list',
-            name: 'task',
-            choices: function (ctx) {
-                var p = data.projects.filter(function (p) {
-                    return p.id === ctx.project;
-                })[0];
-                return p.tasks.map(function (t) {
-                    return { name: t.name, value: t.id };
-                });
-            },
-            message: 'What kind of task?',
-            when: !args.task
-        },
-        {
-            name: 'tp',
-            validate: validateNumber(false, function (i) {
-                var done = this.async();
-                tpClient.getTask(i)
-                .then(function (task) {
-                    tpTask = task;
-                    done(true);
-                }, function (err) {
-                    done('An error occured while fetching task from target process.' + err);
-                });
-            }),
-            message: 'Any target process task?',
-            when: !!tpClient && !args.tp,
-            filter: function (i) {
-                if(!i) return i;
-                return ['', '> user_story #' + tpTask.UserStory.Id + ' ' + tpTask.UserStory.Name,
-                '> task #' + tpTask.Id + ' ' + tpTask.Name
-            ].join('\n');
-            }
-        },
-        {
-            name: 'notes',
-            message: 'Notes:'
-        },
-        {
             name: 'hours',
-            validate: validateFloat(false),
+            validate: base.validation.float(false),
             message: 'How may hours have you already spent on it?',
             when: !hours,
             filter: function (i) {
@@ -96,9 +29,13 @@ var buildFields = function (args, data) {
             type: 'confirm',
             name: 'confirm',
             message: 'Are you happy with your selection?'
+        },
+        {
+            name: 'notes',
+            message: 'Notes:'
         }
     ];
-};
+}
 
 function create(data) {
     var opts = {
@@ -128,9 +65,9 @@ function create(data) {
 module.exports = {
     $t: true,
     _: function (args) {
-        harvest.TimeTracking.daily({}, function (err, data) {
-            if(err) return utils.log.err(err);
-            inquirer.prompt(buildFields(args, data), function (result) {
+        base.captureNewTime(args, tpClient, function (result) {
+            inquirer.prompt(buildOtherQuestions(args, result), function (r2) {
+                extend(result, r2);
                 if(!result.confirm) return;
                 create(extend(result, args));
             });
