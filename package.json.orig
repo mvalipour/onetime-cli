@@ -28,8 +28,11 @@
     "btoa": "^1.1.2",
     "chalk": "^1.1.0",
     "configstore": "^1.2.0",
+<<<<<<< HEAD
     "extend": "^3.0.0",
+=======
     "console.table": "^0.4.0",
+>>>>>>> 2dd40469359cb6df5efb73b22229e685ad75c206
     "harvest": "^0.1.0",
     "inquirer": "^0.8.5",
     "jsonfile": "^2.2.1",
