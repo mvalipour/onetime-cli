@@ -1,8 +1,9 @@
 var chalk = require('chalk');
 
-function bracetize(v) {
-    while(v.length < 12) v += ' ';
-    return '['+v.substring(0, 12)+']';
+function summarize(v, l) {
+    if(!v) return v;
+    if(v.length <= l) return v;
+    return v.substring(0, l - 2) + '..';
 }
 
 var log = console.log;
@@ -18,5 +19,5 @@ log.chalk = function (c) {
 
 module.exports = {
     log: log,
-    bracetize: bracetize
+    summarize: summarize
 };

@@ -9,7 +9,6 @@ var TargetProcess = (function() {
     this.full_url = "https://" + this.subdomain + ".tpondemand.com/api/v1";
     this.ajax_defaults = {
       type: 'GET',
-      dataType: 'json',
       headers: {
         'Cache-Control': 'no-cache',
         'Authorization': "Basic " + this.auth_string,
@@ -22,7 +21,7 @@ var TargetProcess = (function() {
     if (!opts) {
       opts = {};
     }
-    return extend({ uri: uri }, this.ajax_defaults, opts);
+    return extend({ url: uri }, this.ajax_defaults, opts);
   };
 
   TargetProcess.prototype.getProjects = function(ajax_opts) {
@@ -61,29 +60,28 @@ var TargetProcess = (function() {
     return request(ajax_opts);
   };
 
-  TargetProcess.prototype.postTime = function(description, spent, remain, spentDate, id, ajax_opts) {
+  TargetProcess.prototype.addTime = function(taskId, opts, ajax_opts) {
     var time_entry, time_struct, time_url;
     if (!ajax_opts) {
       ajax_opts = {};
     }
-    if (!spent) {
+    opts = opts || {};
+    if (!opts.spent) {
       return;
     }
     time_url = this.full_url + '/Times/';
     time_entry = {
-      Description: description,
-      Spent: spent,
-      Remain: remain,
-      Date: spentDate,
+      Description: opts.description,
+      Spent: opts.spent,
+      Remain: opts.remain,
+      Date: opts.date,
       Assignable: {
-        Id: id
+        Id: taskId
       }
     };
     time_struct = {
-      type: 'POST',
-      dataType: 'json',
-      contentType: 'application/json; charset=utf-8',
-      data: JSON.stringify(time_entry)
+      method: 'POST',
+      json: time_entry
     };
     ajax_opts = this.build_ajax_options(time_url, time_struct);
     return request(ajax_opts);
