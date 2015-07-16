@@ -10,8 +10,12 @@ module.exports = function () {
         password: settings.password
     });
 
-    var userStoryPrefix = '> user_story #';
-    var taskPrefix = '> task #';
+    var prefixes = {
+        userStoryPrefix: '> user_story #',
+        taskPrefix: '> task #',
+        finishedPrefix: '> finished'
+    };
+    result.prefixes = prefixes;
 
     function extractId(l, prefix) {
         if(l.indexOf(prefix) === 0) {
@@ -32,11 +36,13 @@ module.exports = function () {
                         var parts = [];
                         var tp_user_story_id, tp_task_id;
                         e.notes.match(/[^\r\n]+/g).forEach(function (l) {
-                            var us = extractId(l, userStoryPrefix);
-                            var task = extractId(l, taskPrefix);
+                            var us = extractId(l, prefixes.userStoryPrefix);
+                            var task = extractId(l, prefixes.taskPrefix);
+                            var finished = l.trim() === prefixes.finishedPrefix;
 
                             if(us) e.tp_user_story = us;
                             else if(task) e.tp_task = task;
+                            else if(finished) e.finished = true;
                             else parts.push(l);
                         });
 

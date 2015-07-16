@@ -14,9 +14,13 @@ module.exports = {
             var t = 0;
             var output = d.day_entries.map(function (i) {
                 t += i.hours;
+
+                var icon;
+                if(i.running) icon = String.fromCharCode(0x25B6);
+                else if(i.finished) icon = String.fromCharCode(0x25A0);
+
                 var elements = {
-                    hours:  (i.running ? String.fromCharCode(0x25B6) : ' ') +
-                            ' ' + i.hours.toFixed(2),
+                    hours:  (icon || ' ') + ' ' + i.hours.toFixed(2),
                     project: utils.summarize(i.project, 14),
                     type: utils.summarize(i.task, 14)
                 };
