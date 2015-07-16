@@ -1,4 +1,15 @@
 var command = require('../../utils/command');
-module.exports = command.setup(function (m) {
-    return require('./' + m);
+
+module.exports = command.dispatch([
+    'list',
+    'start',
+    'pause',
+    'resume',
+    'finish',
+
+    'alias'
+], {
+    help: {
+        description: 'manage your timesheet',
+    }
 });

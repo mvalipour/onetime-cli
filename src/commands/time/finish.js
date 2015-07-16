@@ -38,6 +38,9 @@ function logTime(e, done) {
 
 module.exports = {
     $t: true,
+    help: {
+        description: 'finish a timesheet'
+    },
     _: function (t) {
         if(!tp){
             return utils.log.err('this command is only available if target process is configured.');

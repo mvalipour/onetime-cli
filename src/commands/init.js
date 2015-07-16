@@ -39,27 +39,43 @@ function store(d, res) {
 
 
 var apps = {
-    harvest: function () {
-        prompt('Harvest', function (opts) {
-            store('harvest', opts);
-            config.set('_initialized', true);
-            utils.log('harvest is configured successfully.');
-        });
+    harvest: {
+        _: function () {
+            prompt('Harvest', function (opts) {
+                store('harvest', opts);
+                config.set('_initialized', true);
+                utils.log('harvest is configured successfully.');
+            });
+        },
+        help: {
+            description: 'initialize harvest'
+        }
     },
-    tp: function () {
-        prompt('Target Process', function (opts) {
-            store('tp', opts);
-            utils.log('target process is configured successfully.');
-        });
+    tp: {
+        _: function () {
+            prompt('Target Process', function (opts) {
+                store('tp', opts);
+                utils.log('target process is configured successfully.');
+            });
+        },
+        help: {
+            description: 'initialize target process'
+        }
     }
 };
 
 var command = require('../utils/command');
-module.exports = command.setup(function (m) {
-    if(m !== 'harvest') {
-        config.ensure();
+module.exports = command.dispatch([
+    { name: 'harvest', noConfig: true },
+    'tp'
+], {
+    help: {
+        description: 'initialize onetime',
     }
-
+}, function (m) {
     var a = apps[m];
-    return a ? { $t : true, _: a } : null;
+    if(!a) return null;
+
+    a.$t = true;
+    return a;
 });

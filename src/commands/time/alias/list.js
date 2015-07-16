@@ -5,6 +5,9 @@ var store = require('./_store');
 
 module.exports = {
     $t: true,
+    help: {
+        description: 'list aliases'
+    },
     _: function (args) {
         store.list(function (err, data) {
             if(err) return utils.log.err(err);

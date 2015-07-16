@@ -2,11 +2,11 @@ var command = require('../utils/command');
 var utils = require('../utils');
 var config = require('../config');
 
-module.exports = command.setup(function (m) {
-
-    if(m !== 'init') {
-        config.ensure();
+module.exports = command.dispatch([
+    { name: 'init', noConfig: true },
+    'time'
+], {
+    help: {
+        description: 'manage harvest and target-proess in one place',
     }
-
-    return require('./' + m);
 });

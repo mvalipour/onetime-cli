@@ -75,6 +75,15 @@ function start(args) {
 
 module.exports = {
     $t: true,
+    help: {
+        description: 'start a timesheet',
+        options: [
+            {
+                name: '-a, --alias',
+                description: 'alias name to start the time with'
+            }
+        ]
+    },
     _: function (args) {
         var alias = args.a || args.alias;
         if(alias){

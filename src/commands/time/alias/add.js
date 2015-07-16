@@ -5,6 +5,9 @@ var store = require('./_store');
 
 module.exports = {
     $t: true,
+    help: {
+        description: 'add an alias'
+    },
     _: function (args) {
         var name = args._[0];
         var questions = [{

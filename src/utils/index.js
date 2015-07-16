@@ -6,6 +6,12 @@ function summarize(v, l) {
     return v.substring(0, l - 2) + '..';
 }
 
+function pad(v, l) {
+    v = v || '';
+    while(v.length < l) v += ' ';
+    return v;
+}
+
 var log = console.log;
 log.err = function () {
     var args = [chalk.red('[ERR!]')].concat(Array.prototype.slice.call(arguments));
@@ -19,5 +25,6 @@ log.chalk = function (c) {
 
 module.exports = {
     log: log,
-    summarize: summarize
+    summarize: summarize,
+    pad: pad
 };

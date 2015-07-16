@@ -5,6 +5,9 @@ var chalk = require('chalk');
 
 module.exports = {
     $t: true,
+    help: {
+        description: 'list a day timesheet'
+    },
     _: function (t) {
         var opts = {};
         var d = t.d || t.date;

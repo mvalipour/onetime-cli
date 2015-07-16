@@ -3,6 +3,9 @@ var harvest = require('../../api/harvest')();
 
 module.exports = {
     $t: true,
+    help: {
+        description: 'pause a timesheet'
+    },
     _: function (t) {
         harvest.TimeTracking.daily({}, function (err, d) {
             if(err) utils.log(err);

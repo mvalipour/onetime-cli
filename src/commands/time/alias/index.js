@@ -1,4 +1,11 @@
 var command = require('../../../utils/command');
-module.exports = command.setup(function (m) {
-    return require('./' + m);
+
+module.exports = command.dispatch([
+    'list',
+    'add',
+    'remove'
+], {
+    help: {
+        description: 'manage your timesheet aliases',
+    }
 });
