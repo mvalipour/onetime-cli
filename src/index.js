@@ -32,23 +32,23 @@ function help(path, e) {
     var options = ((h && h.options) || []).concat(helpOption);
     utils.log();
     if(h && h.description){
-        utils.log('    ' + h.description);
+        utils.log.chalk('green', '    ' + h.description);
         utils.log();
     }
 
     if(options){
-        utils.log('    Options:');
+        utils.log.chalk('green', '    Options:');
         options.forEach(function (o) {
-            utils.log('      ' + utils.pad(o.name, 20), o.description);
+            utils.log.chalk('green', '      ' + utils.pad(o.name, 20), o.description);
         });
         utils.log();
     }
 
     if(usage || names){
-        utils.log('    Usage:');
+        utils.log.chalk('green', '    Usage:');
         if(usage){
             usage.forEach(function (u) {
-                utils.log('      ' + u);
+                utils.log.chalk('green', '      ' + u);
             });
         }
 
@@ -56,7 +56,7 @@ function help(path, e) {
             names.forEach(function (n) {
                 var p = (path.length ? path.join(' ') + ' ' : '') + n;
                 var h = entry.get(path, n).help || {};
-                utils.log('      onetime ' + utils.pad(p, 20), h.description || '');
+                utils.log.chalk('green', '      onetime ' + utils.pad(p, 20), h.description || '');
             });
             utils.log();
         }
