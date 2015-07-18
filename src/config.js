@@ -34,18 +34,5 @@ module.exports = {
     clear: function () {
         store.clear();
     },
-    ensure: function () {
-        if(!store.get('_initialized')){
-            utils.log('onetime is not initialized.');
-            utils.log('please run:');
-            utils.log();
-            utils.log('    onetime init harvest');
-            utils.log();
-            utils.log('also optionally run:');
-            utils.log();
-            utils.log('    onetime init tp');
-            utils.log();
-            process.exit(0);
-        }
-    }
+    isInitialized: store.get('_initialized')
 };

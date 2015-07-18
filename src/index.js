@@ -1,77 +1,30 @@
 #! /usr/bin/env node
 require('./utils/_ext');
 
-var minimist = require('minimist');
 var utils = require('./utils');
 var config = require('./config');
+var command = require('./utils/command');
 
 var args = process.argv.splice(2);
-var e, entry = require('./commands');
-var path = [];
+var app = require('./commands');
 
-while(args.length){
-    e = args[0];
-    if(e === '--help' || e === '-h') return help(path, entry);
-    entry = entry.get(path, e);
-    if(!entry) break;
-    if(entry.$t) break;
+function ensureConfig(path, module) {
+    if(config.isInitialized) return;
 
-    path.push(e);
-    args = args.splice(1);
-}
+    if(!module.$t) return;
+    if(path.isEqualTo(['init', 'harvest'])) return;
 
-function help(path, e) {
-    var helpOption = {
-        name: '-h, --help',
-        description: 'show this help'
-    };
-
-    var h = e.help;
-    var names = e.all;
-    var usage = h && h.usage;
-    var options = ((h && h.options) || []).concat(helpOption);
     utils.log();
-    if(h && h.description){
-        utils.log.chalk('green', '    ' + h.description);
-        utils.log();
-    }
-
-    if(options){
-        utils.log.chalk('green', '    Options:');
-        options.forEach(function (o) {
-            utils.log.chalk('green', '      ' + utils.pad(o.name, 20), o.description);
-        });
-        utils.log();
-    }
-
-    if(usage || names){
-        utils.log.chalk('green', '    Usage:');
-        if(usage){
-            usage.forEach(function (u) {
-                utils.log.chalk('green', '      ' + u);
-            });
-        }
-
-        if(names){
-            names.forEach(function (n) {
-                var p = (path.length ? path.join(' ') + ' ' : '') + n;
-                var h = entry.get(path, n).help || {};
-                utils.log.chalk('green', '      onetime ' + utils.pad(p, 20), h.description || '');
-            });
-            utils.log();
-        }
-    }
+    utils.log.err('onetime is not initialized.');
+    utils.log();
+    utils.log('please run:');
+    utils.log.chalk('green','    onetime init harvest');
+    utils.log();
+    utils.log('also optionally run:');
+    utils.log.chalk('green','    onetime init tp');
+    utils.log();
+    process.exit(0);
 }
 
-if(args.length === 0){
-    help(path, entry);
-}
-else if(entry){
-    var hasHelp = args.filter(function (a) {
-        return a === '--help' || a === '-h';
-    });
-    var action = entry._;
-
-    if(hasHelp.length || !action) return help(path, entry);
-    action.call(entry, minimist(args.splice(1)));
-}
+command.onStarting(ensureConfig);
+command.start(app, args);
