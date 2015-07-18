@@ -8,7 +8,8 @@ module.exports = {
         var base = require('../_base');
         var utils = require('../../../utils');
         var store = require('./_store');
-        var validation = require('../../utils/validation');
+        var validation = require('../../../utils/validation');
+        var tpClient = require('../../../api/tp')();
 
         var name = args._[0];
         var questions = [{
@@ -25,7 +26,7 @@ module.exports = {
                 if(err) return utils.log.err(err);
                 if(e) return utils.log.err('Alias `'+name+'` already exists.');
 
-                base.captureNewTime(args, null, function (res) {
+                base.captureNewTime(args, tpClient, function (res) {
                     store.add(name, res, function (err) {
                         if(err) return utils.log.err(err);
                     });

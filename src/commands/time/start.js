@@ -10,7 +10,7 @@ module.exports = {
         ]
     },
     _: function (args) {
-        var extend = require('util')._extend;
+        var extend = require('extend');
         var utils = require('../../utils');
         var inquirer = require('inquirer');
         var harvest = require('../../api/harvest')();
@@ -22,10 +22,6 @@ module.exports = {
         function buildOtherQuestions(args, data) {
             var hours = 0;
             return [
-                {
-                    name: 'notes',
-                    message: 'Notes:'
-                },
                 {
                     name: 'hours',
                     validate: base.validation.float(false),
@@ -79,9 +75,11 @@ module.exports = {
         function start(args) {
             base.captureNewTime(args, tpClient, function (result) {
                 inquirer.prompt(buildOtherQuestions(args, result), function (r2) {
-                    extend(result, r2);
+                    var notes = [args.notes, result.notes].compact().join('\n');
+                    extend(result, r2, args, { notes: notes });
                     if(!result.confirm) return;
-                    create(extend(result, args));
+                    console.log(result);
+                    create(result);
                 });
             });
         }
@@ -90,6 +88,7 @@ module.exports = {
         if(alias){
             aliasStore.get(alias, function (err, data) {
                 if(err) return utils.log.err(err);
+
                 extend(args, data);
                 start(args);
             });

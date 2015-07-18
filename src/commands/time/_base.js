@@ -53,6 +53,10 @@ function captureNewTime(args, tpClient, done) {
                     '> task #' + tpTask.Id + ' ' + tpTask.Name
                 ].join('\n');
                 }
+            },
+            {
+                name: 'notes',
+                message: 'Notes:'
             }
         ];
     };

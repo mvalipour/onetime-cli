@@ -30,3 +30,9 @@ Array.prototype.isEqualTo = function(b) {
     }
     return true;
 };
+
+Array.prototype.compact = function() {
+    return this.filter(function (i) {
+        return !!i;
+    });
+};
