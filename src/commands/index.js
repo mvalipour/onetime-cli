@@ -4,7 +4,8 @@ var config = require('../config');
 
 module.exports = command.dispatch([
     { name: 'init', noConfig: true },
-    'time'
+    'time',
+    'config'
 ], {
     help: {
         description: 'manage harvest and target-proess in one place',

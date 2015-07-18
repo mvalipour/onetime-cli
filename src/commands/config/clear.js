@@ -4,6 +4,9 @@ var config = require('../../config');
 
 module.exports = {
     $t: true,
+    help: {
+        description: 'clear all onetime configurations'
+    },
     _: function () {
         utils.log();
         utils.log('    [IMPORTANT]');
