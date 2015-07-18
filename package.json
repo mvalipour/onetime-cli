@@ -28,13 +28,14 @@
     "btoa": "^1.1.2",
     "chalk": "^1.1.0",
     "configstore": "^1.2.0",
-    "extend": "^3.0.0",
     "console.table": "^0.4.0",
+    "extend": "^3.0.0",
     "harvest": "^0.1.0",
     "inquirer": "^0.8.5",
     "jsonfile": "^2.2.1",
     "minimist": "^1.1.1",
     "request-promise-json": "^1.0.4",
-    "tp-api": "^1.0.5"
+    "tp-api": "^1.0.5",
+    "validator": "^3.41.2"
   }
 }

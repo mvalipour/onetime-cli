@@ -17,6 +17,7 @@ module.exports = {
         var tpClient = require('../../api/tp')();
         var base = require('./_base');
         var aliasStore = require('./alias/_store');
+        var validation = require('../../utils/validation');
 
         function buildOtherQuestions(args, data) {
             var hours = 0;

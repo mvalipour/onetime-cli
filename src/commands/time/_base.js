@@ -1,34 +1,7 @@
 var inquirer = require('inquirer');
 var utils = require('../../utils');
+var validation = require('../../utils/validation');
 var harvest = require('../../api/harvest')();
-
-var validation = {
-    number: function(required, done) {
-        return function (i) {
-            if(!i && !required) return true;
-            var res = /^\d+$/.test(i);
-            if(!res) return 'Please enter a valid number.';
-            return done ? done.call(this, i) : true;
-        };
-    },
-
-    float: function(required) {
-        return function (i) {
-            if(!i && !required) return true;
-            return parseFloat(i) ? true : 'Please enter a valid number.';
-        };
-    },
-
-    identifier: function (required) {
-        return function (i) {
-            if(!i && !required) return true;
-            var res = /^[a-zA-Z][a-zA-Z0-9]*$/.test(i);
-            if(!res) return 'Please enter a valid identifier.';
-            return true;
-        }
-    }
-};
-
 
 function captureNewTime(args, tpClient, done) {
     var buildQuestions = function (args, data) {

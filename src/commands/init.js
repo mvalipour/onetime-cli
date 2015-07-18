@@ -10,28 +10,25 @@ module.exports = command.dispatch([
     var inquirer = require('inquirer');
     var utils = require('../utils');
     var config = require('../config');
-
-    function required(i) {
-        return !!i;
-    }
+    var validation = require('../utils/validation');
 
     function buildFields(d) {
         return [
             {
                 name: 'domain',
-                message: 'Your '+d+' domain:',
-                validate: required
+                message: 'Your '+d+' domain (e.g. mycompany):',
+                validate: validation.identifier(true)
             },
             {
                 name: 'email',
                 message: 'Your '+d+' email:',
-                validate: required
+                validate: validation.email(true)
             },
             {
                 type: 'password',
                 name: 'password',
                 message: 'Your '+d+' password:',
-                validate: required
+                validate: validation.required
             }
         ];
     }
