@@ -1,47 +1,47 @@
-var utils = require('../../utils');
-var harvest = require('../../api/harvest')();
-var tp = require('../../api/tp')();
-
-function pauseAndLog(e, done) {
-    if(e.running) {
-        utils.log('Stopping timer on harvest...');
-        harvest.TimeTracking.toggleTimer({ id: e.id }, function (err) {
-            if(err) return utils.log.err(err);
-            utils.log('Done.');
-            logTime(e, done);
-        });
-    }
-    else {
-        logTime(e, done);
-    }
-}
-
-function logTime(e, done) {
-    if(!e.tp_task || !e.tp_task.id) return done();
-
-    utils.log('Logging time on target process...');
-
-    var tpdata = {
-        description: e.notes || '-',
-        spent: e.hours,
-        remain: 0,// -- todo: capture from user
-        date: new Date(e.created_at).toJSON()
-    };
-    tp.addTime(e.tp_task.id, tpdata)
-        .then(function (a) {
-            utils.log(tpdata.spent + 'h is logged on target process against task #' + e.tp_task.id);
-            done();
-        }, function (err) {
-            utils.log.err(err);
-        });
-}
-
 module.exports = {
     $t: true,
     help: {
         description: 'finish a timesheet'
     },
     _: function (t) {
+        var utils = require('../../utils');
+        var harvest = require('../../api/harvest')();
+        var tp = require('../../api/tp')();
+
+        function pauseAndLog(e, done) {
+            if(e.running) {
+                utils.log('Stopping timer on harvest...');
+                harvest.TimeTracking.toggleTimer({ id: e.id }, function (err) {
+                    if(err) return utils.log.err(err);
+                    utils.log('Done.');
+                    logTime(e, done);
+                });
+            }
+            else {
+                logTime(e, done);
+            }
+        }
+
+        function logTime(e, done) {
+            if(!e.tp_task || !e.tp_task.id) return done();
+
+            utils.log('Logging time on target process...');
+
+            var tpdata = {
+                description: e.notes || '-',
+                spent: e.hours,
+                remain: 0,// -- todo: capture from user
+                date: new Date(e.created_at).toJSON()
+            };
+            tp.addTime(e.tp_task.id, tpdata)
+                .then(function (a) {
+                    utils.log(tpdata.spent + 'h is logged on target process against task #' + e.tp_task.id);
+                    done();
+                }, function (err) {
+                    utils.log.err(err);
+                });
+        }
+
         if(!tp){
             return utils.log.err('this command is only available if target process is configured.');
         }

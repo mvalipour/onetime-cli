@@ -3,7 +3,7 @@ var utils = require('../utils');
 var config = require('../config');
 
 module.exports = command.dispatch([
-    { name: 'init', noConfig: true },
+    'init',
     'time',
     'config'
 ], {

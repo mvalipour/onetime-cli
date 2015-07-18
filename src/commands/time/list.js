@@ -1,8 +1,3 @@
-var utils = require('../../utils');
-var harvest = require('../../api/harvest')();
-require('console.table');
-var chalk = require('chalk');
-
 module.exports = {
     $t: true,
     help: {
@@ -12,6 +7,11 @@ module.exports = {
         ]
     },
     _: function (t) {
+        var utils = require('../../utils');
+        var harvest = require('../../api/harvest')();
+        require('console.table');
+        var chalk = require('chalk');
+
         var opts = {};
         var d = t.d || t.date;
         if(d) opts.date = new Date(d);

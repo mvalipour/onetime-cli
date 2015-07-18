@@ -10,11 +10,8 @@ function loadModule(name, path) {
     return require(basePath);
 }
 
-function load(path, name, noConfig, loadFn) {
+function load(path, name, loadFn) {
     try {
-        if(noConfig) {
-            config.ensure();
-        }
         loadFn = loadFn || loadModule;
         return loadFn(name, path);
     }
@@ -44,7 +41,7 @@ function dispatch(modules, opts, loadFn) {
 
             if(!e) return notFound(name);
 
-            var m = load(path, name, e.noConfig, loadFn);
+            var m = load(path, name, loadFn);
             if(!m) return notFound(name);
 
             return m;

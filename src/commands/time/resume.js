@@ -1,12 +1,12 @@
-var utils = require('../../utils');
-var harvest = require('../../api/harvest')();
-
 module.exports = {
     $t: true,
     help: {
         description: 'continue a timesheet'
     },
     _: function (t) {
+        var utils = require('../../utils');
+        var harvest = require('../../api/harvest')();
+
         harvest.TimeTracking.daily({}, function (err, d) {
             if(err) utils.log(err);
             var e = d.day_entries.sortByDesc('updated_at')[0];
