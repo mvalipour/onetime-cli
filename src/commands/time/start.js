@@ -2,12 +2,16 @@ module.exports = {
     $t: true,
     help: {
         description: 'start a timesheet',
-        options: [
-            {
-                name: '-a, --alias',
-                description: 'alias name to start the time with'
-            }
-        ]
+        options: [{
+            name: '-p, --project',
+            description: 'harvest project id'
+        }, {
+            name: '-tp',
+            description: 'target process task id'
+        }, {
+            name: '-a, --alias',
+            description: 'alias name to start the time with'
+        }]
     },
     _: function (args) {
         var extend = require('extend');
