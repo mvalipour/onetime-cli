@@ -24,8 +24,13 @@ function captureNewTime(args, tpClient, done) {
                 name: 'task',
                 choices: function (ctx) {
                     var p = data.projects.filter(function (p) {
-                        return p.id === ctx.project;
+                        return p.id === (ctx.project || args.project);
                     })[0];
+                    if(!p) {
+                        utils.log.err('Project could not be found!');
+                        return process.exit(1);
+                    }
+
                     return p.tasks.map(function (t) {
                         return { name: t.name, value: t.id };
                     });

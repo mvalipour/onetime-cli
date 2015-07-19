@@ -1,4 +1,5 @@
 var minimist = require('minimist');
+var extend = require('extend');
 var utils = require('./');
 var config = require('../config');
 
@@ -129,7 +130,10 @@ function start(entry, args) {
         onStartingRegistrar.forEach(function (f) {
             f.call(entry, path, entry);
         });
-        action.call(entry, minimist(args.splice(1)));
+
+        var inputArgs = minimist(args.splice(1));
+        extend(inputArgs, config.locals);
+        action.call(entry, inputArgs);
     }
 }
 

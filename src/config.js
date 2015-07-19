@@ -2,6 +2,11 @@ var Configstore = require('configstore');
 var pkg = require('../package.json');
 var utils = require('./utils');
 var fs = require('fs');
+var jsonfile = require('jsonfile');
+
+var localFilename = process.env.PWD + '/.onetime';
+var locals = fs.existsSync(localFilename) && jsonfile.readFileSync(localFilename);
+locals = locals || {};
 
 var store = new Configstore(pkg.name);
 
@@ -13,6 +18,7 @@ if (!fs.existsSync(appdata)){
 }
 
 module.exports = {
+    locals: locals,
     appdata: appdata,
     get: function (k) {
         return store.get(k);

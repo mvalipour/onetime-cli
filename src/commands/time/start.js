@@ -73,6 +73,11 @@ module.exports = {
         }
 
         function start(args) {
+            if(args.p){
+                args.project = args.p;
+                delete args.p;
+            }
+
             base.captureNewTime(args, tpClient, function (result) {
                 inquirer.prompt(buildOtherQuestions(args, result), function (r2) {
                     var notes = [args.notes, result.notes].compact().join('\n');
