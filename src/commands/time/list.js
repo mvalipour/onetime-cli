@@ -16,7 +16,7 @@ module.exports = {
         var d = t.d || t.date;
         if(d) opts.date = new Date(d);
         harvest.TimeTracking.daily(opts, function (err, d) {
-            if(err) utils.log(err);
+            if(err) return utils.log.err(err);
             var t = 0;
             var output = d.day_entries.map(function (i) {
                 t += i.hours;
@@ -43,8 +43,13 @@ module.exports = {
             var highlight = chalk.cyan;
 
             utils.log();
-            console.table('time logs for ' + highlight(d.for_day), output);
-            utils.log(highlight(t.toFixed(2)));
+            if(output.length === 0){
+                utils.log.chalk('gray', 'no timers could be found for: ' + highlight(d.for_day));
+            }
+            else {
+                console.table('time logs for ' + highlight(d.for_day), output);
+                utils.log(highlight(t.toFixed(2)));
+            }
             utils.log();
         });
     }

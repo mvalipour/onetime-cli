@@ -1,3 +1,5 @@
+var utils = require('./');
+
 Array.prototype.sortBy = function (f) {
     return this.sort(function (a, b) {
         if (a[f] < b[f])
@@ -34,5 +36,23 @@ Array.prototype.isEqualTo = function(b) {
 Array.prototype.compact = function() {
     return this.filter(function (i) {
         return !!i;
+    });
+};
+
+Array.prototype.tabularize = function () {
+    var list = this.map(function (i) {
+        for(var p in i) i[p] = (i[p] || '').toString();
+        return i;
+    });
+
+    var len = [];
+    list.forEach(function (i) {
+        for(var p in i) len[p] = Math.max(len[p] || 0, i[p].length);
+    });
+
+    return list.map(function (i) {
+        var res = [];
+        for(var p in i) res.push(utils.pad(i[p], len[p]));
+        return res.join('  ');
     });
 };

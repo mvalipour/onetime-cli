@@ -78,7 +78,6 @@ module.exports = {
                     var notes = [args.notes, result.notes].compact().join('\n');
                     extend(result, r2, args, { notes: notes });
                     if(!result.confirm) return;
-                    console.log(result);
                     create(result);
                 });
             });
