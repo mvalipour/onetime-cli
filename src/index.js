@@ -1,5 +1,6 @@
 #! /usr/bin/env node
 require('./utils/_ext');
+require('console.table');
 
 var utils = require('./utils');
 var config = require('./config');

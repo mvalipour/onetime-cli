@@ -5,6 +5,7 @@ var config = require('../config');
 module.exports = command.dispatch([
     'init',
     'time',
+    'project',
     'config'
 ], {
     help: {

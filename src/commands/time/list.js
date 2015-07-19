@@ -9,7 +9,6 @@ module.exports = {
     _: function (t) {
         var utils = require('../../utils');
         var harvest = require('../../api/harvest')();
-        require('console.table');
         var chalk = require('chalk');
 
         var opts = {};

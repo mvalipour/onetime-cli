@@ -56,3 +56,13 @@ Array.prototype.tabularize = function () {
         return res.join('  ');
     });
 };
+
+Array.prototype.select = function (fields) {
+    return this.map(function (i) {
+        var res = {};
+        fields.forEach(function (f) {
+            res[f] = i[f];
+        });
+        return res;
+    });
+};
