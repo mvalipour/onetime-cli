@@ -5,6 +5,10 @@ module.exports = {
         options: [{
             name: '-d, --date',
             description: 'date of the timesheet. e.g. 2015-07-01'
+        },
+        {
+            name: '-o, --offfset',
+            description: 'date offset relative to today. e.g. 1 for yesterday'
         }, {
             name: '--all',
             description: 'finished all unfinished times'
@@ -84,6 +88,8 @@ module.exports = {
         }
 
         var d = t.d || t.date;
+        var offset = +(t.o || t.offset);
+        if (!d && offset) d = new Date().addDays(-offset);
         base.selectTime(d, function (i) {
             return !i.finished;
         }, function (selection) {

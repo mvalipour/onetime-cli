@@ -3,7 +3,8 @@ module.exports = {
     help: {
         description: 'list a day timesheet',
         options: [
-            { name: '-d, --date', description: 'date of the timesheet. e.g. 2015-07-01' }
+            { name: '-d, --date', description: 'date of the timesheet. e.g. 2015-07-01' },
+            { name: '-o, --offfset', description: 'date offset relative to today. e.g. 1 for yesterday' }
         ]
     },
     _: function (t) {
@@ -13,7 +14,9 @@ module.exports = {
 
         var opts = {};
         var d = t.d || t.date;
+        var offset = +(t.o || t.offset);
         if(d) opts.date = new Date(d);
+        else if (offset) opts.date = new Date().addDays(-offset);
         harvest.TimeTracking.daily(opts, function (err, d) {
             if(err) return utils.log.err(err);
             var t = 0;

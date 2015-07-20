@@ -1,5 +1,12 @@
 var utils = require('./');
 
+Date.prototype.addDays = function(days)
+{
+    var dat = new Date(this.valueOf());
+    dat.setDate(dat.getDate() + days);
+    return dat;
+};
+
 Array.prototype.sortBy = function (f) {
     return this.sort(function (a, b) {
         if (a[f] < b[f])
