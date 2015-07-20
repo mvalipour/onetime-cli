@@ -46,6 +46,7 @@ module.exports = function () {
                             else parts.push(l);
                         });
 
+                        e.full_notes = e.notes;
                         e.notes = parts.join(' ');
                         e.running = !!e.timer_started_at;
                     });

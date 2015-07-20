@@ -6,17 +6,34 @@ module.exports = {
     _: function (t) {
         var utils = require('../../utils');
         var harvest = require('../../api/harvest')();
+        var base = require('./_base');
 
-        harvest.TimeTracking.daily({}, function (err, d) {
-            if(err) utils.log(err);
-            var e = d.day_entries.sortByDesc('updated_at')[0];
-            if(!e) return utils.log.chalk('red', 'No timer could be found.');
+        function pause(e) {
+            if(e.running){
+                return utils.log.err('This timer is already running.');
+            }
 
-            console.log('//TODO: print entry');
+            if(e.tp_task && e.finished){
+                return utils.log.err('This timer is associated with a target-process task and is already finalized. consider adding it again.');
+            }
+
             harvest.TimeTracking.toggleTimer({ id: e.id }, function (err) {
                 if(err) return utils.log.err(err);
                 utils.log('Your timer is running again.');
             });
+        }
+
+        base.selectTime(null, function (i) {
+            return !i.running;
+        }, function (selection) {
+            if(!selection){
+                utils.log();
+                utils.log.chalk('gray', 'no timer could be found.');
+                utils.log();
+                return;
+            }
+
+            pause(selection[0]);
         });
     }
 };

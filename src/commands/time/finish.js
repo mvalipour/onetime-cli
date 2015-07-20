@@ -14,7 +14,7 @@ module.exports = {
         var utils = require('../../utils');
         var harvest = require('../../api/harvest')();
         var tp = require('../../api/tp')();
-        var inquirer = require('inquirer');
+        var base = require('./_base');
 
         function pauseAndLog(e, done) {
             if(e.running) {
@@ -26,12 +26,13 @@ module.exports = {
                 });
             }
             else {
+                utils.log('    Time is already stopped.')
                 logTime(e, done);
             }
         }
 
         function logTime(e, done) {
-            if(!e.tp_task || !e.tp_task.id) return done();
+            if(!tp || !e.tp_task || !e.tp_task.id) return done();
 
             utils.log('    Logging time on target process...');
 
@@ -56,10 +57,15 @@ module.exports = {
 
             utils.log('finishing time:', e.id);
             pauseAndLog(e, function () {
+                if(!e.tp_task) {
+                    utils.log('    Time is not associated with a target-process task.')
+                    return done();
+                }
+
                 utils.log('    Marking time as finished on harvest...');
                 var model = {
                     id: e.id,
-                    notes: e.notes + '\n' + harvest.prefixes.finishedPrefix
+                    notes: e.full_notes + '\n' + harvest.prefixes.finishedPrefix
                 };
                 harvest.TimeTracking.update(model, function (err) {
                     if(err) return utils.log.err(err);
@@ -77,66 +83,18 @@ module.exports = {
             });
         }
 
-        if(!tp){
-            return utils.log.err('this command is only available if target process is configured.');
-        }
-
-        var opts = {};
         var d = t.d || t.date;
-        if(d) opts.date = new Date(d);
-        harvest.TimeTracking.daily(opts, function (err, d) {
-            if(err) return utils.log(err);
-            var e = d.day_entries.sortByDesc('updated_at')[0];
-
-            var entries = d.day_entries.filter(function (i) {
-                return !i.finished;
-            });
-            var output = entries.map(function (i) {
-                var us = i.tp_user_story;
-                var task = i.tp_task;
-
-                return {
-                    hours:  i.hours.toFixed(2),
-                    project: utils.summarize(i.project, 14),
-                    type: utils.summarize(i.task, 14),
-                    'user story': us ? utils.summarize(us.id + ': ' + us.name, 20) : '-',
-                    task: task ? utils.summarize(task.id + ': ' + task.name, 20) : '-',
-                    notes: utils.summarize(i.notes, 24) || '-'
-                };
-            }).tabularize();
-
-            var choices = [];
-            for (var i = 0; i < entries.length; i++) {
-                choices.push({
-                    value: entries[i].id,
-                    name: output[i]
-                });
-            }
-
-            if(choices.length === 0){
+        base.selectTime(d, function (i) {
+            return !i.finished;
+        }, function (selection) {
+            if(!selection){
                 utils.log();
                 utils.log.chalk('gray', 'no unfinished time could be found.');
                 utils.log();
                 return;
             }
 
-            if(t.all){
-                finishAll(entries);
-            }
-            else {
-                var q = {
-                    type: 'list',
-                    name: 'time',
-                    choices: choices,
-                    message: 'Which time?'
-                };
-
-                inquirer.prompt(q, function (choice) {
-                    finishAll(entries.filter(function (i) {
-                        return i.id === choice.time;
-                    }));
-                });
-            }
-        });
+            finishAll(selection);
+        }, t.all);
     }
 };
