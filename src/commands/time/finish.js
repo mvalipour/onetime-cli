@@ -36,7 +36,7 @@ module.exports = {
         }
 
         function logTime(e, done) {
-            if(!tp || !e.tp_task || !e.tp_task.id) return done();
+            if(!tp || !e.tp_task || !e.tp_task.id || !e.hours) return done();
 
             utils.log('    Logging time on target process...');
 
