@@ -51,31 +51,6 @@ module.exports = {
             ];
         }
 
-        function create(data) {
-            var opts = {
-                notes: data.tp + (data.notes ? '\n' + data.notes : ''),
-                hours: data.hours || 0,
-                project_id: data.project,
-                task_id: data.task,
-                spent_at: new Date()
-            };
-
-            function success() {
-                utils.log('Your time entry has been created.');
-            }
-
-            harvest.TimeTracking.create(opts, function (err, res) {
-                if(err) return utils.log.err(err);
-                if(data.s && opts.hours){
-                    harvest.TimeTracking.toggleTimer({ id: res.id }, function (err) {
-                        if(err) return utils.log.err(err);
-                        success();
-                    });
-                }
-                else success();
-            });
-        }
-
         function start(args) {
             if(args.p){
                 args.project = args.p;
@@ -87,7 +62,7 @@ module.exports = {
                     var notes = [args.notes, result.notes].compact().join('\n');
                     extend(result, r2, args, { notes: notes });
                     if(!result.confirm) return;
-                    create(result);
+                    base.createTime(result);
                 });
             });
         }

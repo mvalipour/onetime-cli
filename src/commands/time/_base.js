@@ -55,9 +55,10 @@ function captureNewTime(args, tpClient, done) {
                 when: !!tpClient && !args.tp,
                 filter: function (i) {
                     if(!i) return i;
-                    return ['', '> user_story #' + tpTask.UserStory.Id + ' ' + tpTask.UserStory.Name,
-                    '> task #' + tpTask.Id + ' ' + tpTask.Name
-                ].join('\n');
+
+                    var task = { id: tpTask.Id, name: tpTask.Name };
+                    var us  = { id: tpTask.UserStory.Id, name: tpTask.UserStory.Name };
+                    return createTpNote(task, us);
                 }
             },
             {
@@ -73,13 +74,21 @@ function captureNewTime(args, tpClient, done) {
     });
 }
 
+function createTpNote(task, us) {
+    if(!task || !us) return '';
+    return ['', '> user_story #' + us.id + ' ' + us.name,
+    '> task #' + task.id + ' ' + task.name
+].join('\n');
+}
+
 function selectTime(date, filter, done, all) {
     var opts = {};
     if(date) opts.date = new Date(date);
     harvest.TimeTracking.daily(opts, function (err, d) {
         if(err) return utils.log(err);
 
-        var entries = d.day_entries.filter(filter);
+        var entries = d.day_entries;
+        if(filter) entries = entries.filter(filter);
         var output = entries.map(function (i) {
             var us = i.tp_user_story;
             var task = i.tp_task;
@@ -126,8 +135,35 @@ function selectTime(date, filter, done, all) {
     });
 }
 
+function createTime(data) {
+    var opts = {
+        notes: data.tp + (data.notes ? '\n' + data.notes : ''),
+        hours: data.hours || 0,
+        project_id: data.project,
+        task_id: data.task,
+        spent_at: new Date()
+    };
+
+    function success() {
+        utils.log('Your time entry has been created.');
+    }
+
+    harvest.TimeTracking.create(opts, function (err, res) {
+        if(err) return utils.log.err(err);
+        if(data.s && opts.hours){
+            harvest.TimeTracking.toggleTimer({ id: res.id }, function (err) {
+                if(err) return utils.log.err(err);
+                success();
+            });
+        }
+        else success();
+    });
+}
+
 module.exports = {
     validation: validation,
     captureNewTime: captureNewTime,
-    selectTime: selectTime
+    selectTime: selectTime,
+    createTime: createTime,
+    createTpNote: createTpNote
 };

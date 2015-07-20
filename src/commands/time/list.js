@@ -4,7 +4,7 @@ module.exports = {
         description: 'list a day timesheet',
         options: [
             { name: '-d, --date', description: 'date of the timesheet. e.g. 2015-07-01' },
-            { name: '-o, --offfset', description: 'date offset relative to today. e.g. 1 for yesterday' }
+            { name: '-o, --offset', description: 'date offset relative to today. e.g. 1 for yesterday' }
         ]
     },
     _: function (t) {

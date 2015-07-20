@@ -6,6 +6,7 @@ module.exports = command.dispatch([
     'pause',
     'resume',
     'finish',
+    'restart',
 
     'alias'
 ], {
