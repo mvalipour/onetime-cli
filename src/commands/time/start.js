@@ -23,34 +23,6 @@ module.exports = {
         var aliasStore = require('./alias/_store');
         var validation = require('../../utils/validation');
 
-        function buildOtherQuestions(args, data) {
-            var hours = 0;
-            return [
-                {
-                    name: 'hours',
-                    validate: base.validation.float(false),
-                    message: 'How may hours have you already spent on it?',
-                    when: !hours,
-                    filter: function (i) {
-                        return (hours = i);
-                    }
-                },
-                {
-                    name: 's',
-                    type: 'confirm',
-                    message: 'Are you still doing this?',
-                    when: function () {
-                        return !args.s && hours;
-                    }
-                },
-                {
-                    type: 'confirm',
-                    name: 'confirm',
-                    message: 'Are you happy with your selection?'
-                }
-            ];
-        }
-
         function start(args) {
             if(args.p){
                 args.project = args.p;
@@ -58,7 +30,7 @@ module.exports = {
             }
 
             base.captureNewTime(args, tpClient, function (result) {
-                inquirer.prompt(buildOtherQuestions(args, result), function (r2) {
+                base.captureHourAndConfirm(args, function (r2) {
                     var notes = [args.notes, result.notes].compact().join('\n');
                     extend(result, r2, args, { notes: notes });
                     if(!result.confirm) return;

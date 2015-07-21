@@ -16,15 +16,15 @@ module.exports = {
         var harvest = require('../../api/harvest')();
         var base = require('./_base');
 
-        function restart(e) {
+        function restart(e, data) {
             var tp = base.createTpNote(e.tp_task, e.tp_user_story);
             base.createTime({
                 tp: tp,
                 notes: e.notes,
-                hours: e.hours,
+                hours: data.hours,
                 project: e.project_id,
                 task: e.task_id,
-                s: true
+                s: data.s
             });
         }
 
@@ -32,7 +32,9 @@ module.exports = {
         var offset = +(t.o || t.offset);
         if (!d && offset) d = new Date().addDays(-offset);
         base.selectTime(d, null, function (selection) {
-            restart(selection[0]);
+            base.captureHourAndConfirm(t, function (data) {
+                restart(selection[0], data);
+            });
         });
 
     }

@@ -160,10 +160,43 @@ function createTime(data) {
     });
 }
 
+function captureHourAndConfirm(args, done) {
+    function buildQuestions(args) {
+        var hours = 0;
+        return [
+            {
+                name: 'hours',
+                validate: validation.float(false),
+                message: 'How may hours have you already spent on it?',
+                when: !hours,
+                filter: function (i) {
+                    return (hours = i);
+                }
+            },
+            {
+                name: 's',
+                type: 'confirm',
+                message: 'Are you still doing this?',
+                when: function () {
+                    return !args.s && hours;
+                }
+            },
+            {
+                type: 'confirm',
+                name: 'confirm',
+                message: 'Are you happy with your selection?'
+            }
+        ];
+    }
+
+    inquirer.prompt(buildQuestions(args), done);
+}
+
 module.exports = {
     validation: validation,
     captureNewTime: captureNewTime,
     selectTime: selectTime,
     createTime: createTime,
-    createTpNote: createTpNote
+    createTpNote: createTpNote,
+    captureHourAndConfirm: captureHourAndConfirm
 };
