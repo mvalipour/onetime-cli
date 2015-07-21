@@ -1,7 +1,7 @@
 {
   "name": "onetime-cli",
   "version": "1.0.3",
-  "description": "one-time timesheet management command line interfaec",
+  "description": "a command line interface to manage harvest and target-proess in one place" ,
   "main": "src/index.js",
   "scripts": {
     "test": "mocha"
@@ -12,7 +12,7 @@
   },
   "keywords": [
     "timesheet",
-    "targetprocess",
+    "target-process",
     "harvest"
   ],
   "author": "Mo Valipour <valipour@gmail.com>",
@@ -35,7 +35,6 @@
     "jsonfile": "^2.2.1",
     "minimist": "^1.1.1",
     "request-promise-json": "^1.0.4",
-    "tp-api": "^1.0.5",
     "validator": "^3.41.2"
   }
 }
