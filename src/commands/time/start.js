@@ -6,7 +6,7 @@ module.exports = {
             name: '-p, --project',
             description: 'harvest project id'
         }, {
-            name: '-tp',
+            name: '--tp',
             description: 'target process task id'
         }, {
             name: '-a, --alias',
