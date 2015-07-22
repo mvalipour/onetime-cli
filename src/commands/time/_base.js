@@ -166,11 +166,11 @@ function captureHourAndConfirm(args, done) {
         return [
             {
                 name: 'hours',
-                validate: validation.float(false),
+                validate: validation.time(false),
                 message: 'How may hours have you already spent on it?',
                 when: !hours,
                 filter: function (i) {
-                    return (hours = i);
+                    return (hours = validation.convertTime(i) || 0);
                 }
             },
             {
