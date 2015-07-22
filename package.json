@@ -4,7 +4,7 @@
   "description": "a command line interface to manage harvest and target-proess in one place",
   "main": "src/index.js",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha --recursive"
   },
   "repository": {
     "type": "git",
@@ -36,5 +36,9 @@
     "minimist": "^1.1.1",
     "request-promise-json": "^1.0.4",
     "validator": "^3.41.2"
+  },
+  "devDependencies": {
+    "chai": "^3.2.0",
+    "mocha": "^2.2.5"
   }
 }
