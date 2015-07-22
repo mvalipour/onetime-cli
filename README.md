@@ -1,4 +1,5 @@
 # onetime-cli
+![travis](https://travis-ci.org/mvalipour/onetime-cli.svg?branch=master)
 
 Manage harvest and target-proess in one place from command line.
 
