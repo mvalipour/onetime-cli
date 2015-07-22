@@ -4,7 +4,7 @@ require('console.table');
 
 var utils = require('./utils');
 var config = require('./config');
-var Runner = require('./dastoor').Runner;
+var Runner = require('dastoor').Runner;
 
 var args = process.argv.splice(2);
 var app = require('./commands');
@@ -28,8 +28,7 @@ function ensureConfig(path, module) {
 }
 
 var runner = new Runner({
-    log: utils.log,
-    errorLog: utils.log.err
+    localArgs: config.locals
 });
 runner.onModuleLoad(ensureConfig);
 runner.run(app, args);

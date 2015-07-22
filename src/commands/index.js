@@ -1,23 +1,8 @@
-/*
-var command = require('../utils/command');
-var utils = require('../utils');
-var config = require('../config');
+var cli = require('dastoor').builder;
 
-module.exports = command.dispatch([
-    'init',
-    'time',
-    'project',
-    'config'
-], {
-    help: {
-        description: 'manage harvest and target-proess in one place',
-    }
-});
-*/
+require('./config');
 
-var Command = require('../dastoor').Command;
-
-module.exports = new Command('onetime')
+module.exports = cli.command('onetime')
 .withHelp({
-    description: 'this is me'
+    description: 'manage harvest and target-proess in one place',
 });

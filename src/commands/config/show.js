@@ -1,26 +1,27 @@
-module.exports = {
-    $t: true,
-    help: {
-        description: 'show onetime configurations'
-    },
-    _: function () {
-        var utils = require('../../utils');
-        var config = require('../../config');
-        var props = ['domain', 'email'];
+var cli = require('dastoor').builder;
 
-        function showDomain(name, key) {
-            var settings = config.readDomain(key, props);
-            if(!settings) return;
+module.exports = cli.command('onetime.config.show')
+.asTerminal()
+.withHelp({
+    description: 'show onetime configurations'
+})
+.withAction(function () {
+    var utils = require('../../utils');
+    var config = require('../../config');
+    var props = ['domain', 'email'];
 
-            utils.log();
-            utils.log('    ' + name);
-            props.forEach(function (p) {
-                utils.log('      ' + utils.pad(p, 10) + settings[p]);
-            });
-            utils.log();
-        }
+    function showDomain(name, key) {
+        var settings = config.readDomain(key, props);
+        if(!settings) return;
 
-        showDomain('Harvest', 'harvest');
-        showDomain('Target Process', 'tp');
+        utils.log();
+        utils.log('    ' + name);
+        props.forEach(function (p) {
+            utils.log('      ' + utils.pad(p, 10) + settings[p]);
+        });
+        utils.log();
     }
-};
+
+    showDomain('Harvest', 'harvest');
+    showDomain('Target Process', 'tp');
+});

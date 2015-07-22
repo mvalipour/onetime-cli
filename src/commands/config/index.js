@@ -1,10 +1,9 @@
-var command = require('../../utils/command');
+var cli = require('dastoor').builder;
 
-module.exports = command.dispatch([
-    'show',
-    'clear',
-], {
-    help: {
-        description: 'manage onetime configuration',
-    }
+require('./show');
+require('./clear');
+
+module.exports = cli.command('onetime.config')
+.withHelp({
+    description: 'manage onetime configuration',
 });
