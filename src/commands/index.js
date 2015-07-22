@@ -1,3 +1,4 @@
+/*
 var command = require('../utils/command');
 var utils = require('../utils');
 var config = require('../config');
@@ -11,4 +12,12 @@ module.exports = command.dispatch([
     help: {
         description: 'manage harvest and target-proess in one place',
     }
+});
+*/
+
+var Command = require('../dastoor').Command;
+
+module.exports = new Command('onetime')
+.withHelp({
+    description: 'this is me'
 });

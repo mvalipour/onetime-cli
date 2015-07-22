@@ -1,14 +1,21 @@
 var minimist = require('minimist');
 var extend = require('extend');
-var utils = require('./');
 var config = require('../config');
 
+
+
+function pad(v, l) {
+    v = v || '';
+    while(v.length < l) v += ' ';
+    return v;
+}
+
 function notFound(m) {
-    utils.log.err('Could not find command `'+m+'`');
+    options.errorLog('Could not find command `'+m+'`');
 }
 
 function loadModule(name, path) {
-    var basePath = '../commands/' + (path.length ? path.join('/') + '/' : '') + name;
+    var basePath = options.path + (path.length ? path.join('/') + '/' : '') + name;
     return require(basePath);
 }
 
@@ -81,25 +88,25 @@ function start(entry, args) {
         var names = e.all;
         var usage = h && h.usage;
         var options = ((h && h.options) || []).concat(helpOption);
-        utils.log();
+        options.log();
         if(h && h.description){
-            utils.log.chalk('green', '    ' + h.description);
-            utils.log();
+            options.log('green', '    ' + h.description);
+            options.log();
         }
 
         if(options){
-            utils.log.chalk('green', '    Options:');
+            options.log('green', '    Options:');
             options.forEach(function (o) {
-                utils.log.chalk('green', '      ' + utils.pad(o.name, 20), o.description);
+                options.log('green', '      ' + pad(o.name, 20), o.description);
             });
-            utils.log();
+            options.log();
         }
 
         if(usage || names){
-            utils.log.chalk('green', '    Usage:');
+            options.log('green', '    Usage:');
             if(usage){
                 usage.forEach(function (u) {
-                    utils.log.chalk('green', '      ' + u);
+                    options.log('green', '      ' + u);
                 });
             }
 
@@ -107,9 +114,9 @@ function start(entry, args) {
                 names.forEach(function (n) {
                     var p = (path.length ? path.join(' ') + ' ' : '') + n;
                     var h = entry.get(path, n).help || {};
-                    utils.log.chalk('green', '      onetime ' + utils.pad(p, 20), h.description || '');
+                    options.log('green', '      onetime ' + pad(p, 20), h.description || '');
                 });
-                utils.log();
+                options.log();
             }
         }
     }
