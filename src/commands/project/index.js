@@ -1,9 +1,7 @@
-var command = require('../../utils/command');
+require('./list');
 
-module.exports = command.dispatch([
-    'list'
-], {
-    help: {
-        description: 'harvest projects',
-    }
+require('dastoor').builder
+.node('onetime.project')
+.help({
+    description: 'harvest projects',
 });
