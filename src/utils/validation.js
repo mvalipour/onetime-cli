@@ -29,14 +29,14 @@ function required(i) {
 function email(required) {
     return function (i) {
         if(!i && !required) return true;
-        return validator.isEmail(i) ? true : 'Please enter a valid number.';
+        return validator.isEmail(i) ? true : 'Please enter a valid email address.';
     };
 }
 
 function number(required, done) {
     return function (i) {
         if(!i && !required) return true;
-        if(!validator.isInt(i)) return 'Please enter a valid email address.';
+        if(!validator.isInt(i)) return 'Please enter a valid number.';
         return done ? done.call(this, i) : true;
     };
 }

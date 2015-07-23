@@ -1,6 +1,7 @@
 #! /usr/bin/env node
 require('./utils/_ext');
 require('console.table');
+var updateNotifier = require('update-notifier');
 
 var utils = require('./utils');
 var config = require('./config');
@@ -8,6 +9,8 @@ var Runner = require('dastoor').Runner;
 
 var args = process.argv.splice(2);
 var app = require('./commands');
+
+updateNotifier({pkg: require('../package.json')}).notify();
 
 function ensureConfig(path, module) {
     if(config.isInitialized) return;

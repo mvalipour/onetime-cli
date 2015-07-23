@@ -51,7 +51,7 @@ function captureNewTime(args, tpClient, done) {
                         done('An error occured while fetching task from target process.' + err);
                     });
                 }),
-                message: 'Any target process task?',
+                message: 'Any target process task? (id without #)',
                 when: !!tpClient && !args.tp,
                 filter: function (i) {
                     if(!i) return i;
