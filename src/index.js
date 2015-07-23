@@ -31,6 +31,7 @@ function ensureConfig(module, path) {
 }
 
 var runner = new Runner({
+    errorLog: utils.log.err,
     localArgs: config.locals
 });
 runner.onModuleLoad(ensureConfig);
