@@ -12,10 +12,10 @@ var app = require('./commands');
 
 updateNotifier({pkg: require('../package.json')}).notify();
 
-function ensureConfig(path, module) {
+function ensureConfig(module, path) {
     if(config.isInitialized) return;
 
-    if(!module.$t) return;
+    if(!module.terminal) return;
     if(path.isEqualTo(['init', 'harvest'])) return;
 
     utils.log();
