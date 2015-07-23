@@ -1,11 +1,4 @@
-var cli = require('dastoor').builder;
-
-module.exports = cli.command('onetime.config.clear')
-.asTerminal()
-.withHelp({
-    description: 'clear all onetime configurations'
-})
-.withAction(function () {
+function controller() {
     var inquirer = require('inquirer');
     var utils = require('../../utils');
     var config = require('../../config');
@@ -24,4 +17,10 @@ module.exports = cli.command('onetime.config.clear')
 
         config.clear();
     });
+}
+
+require('dastoor').builder
+.terminal('onetime.config.clear', controller)
+.help({
+    description: 'clear all onetime configurations'
 });

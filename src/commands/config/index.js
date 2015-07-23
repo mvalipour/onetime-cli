@@ -1,9 +1,8 @@
-var cli = require('dastoor').builder;
-
 require('./show');
 require('./clear');
 
-module.exports = cli.command('onetime.config')
-.withHelp({
+require('dastoor').builder
+.node('onetime.config')
+.help({
     description: 'manage onetime configuration',
 });

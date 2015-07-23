@@ -1,8 +1,7 @@
-var cli = require('dastoor').builder;
-
 require('./config');
 
-module.exports = cli.command('onetime')
-.withHelp({
+module.exports = require('dastoor').builder
+.node('onetime')
+.help({
     description: 'manage harvest and target-proess in one place',
 });

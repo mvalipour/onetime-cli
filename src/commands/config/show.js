@@ -1,11 +1,4 @@
-var cli = require('dastoor').builder;
-
-module.exports = cli.command('onetime.config.show')
-.asTerminal()
-.withHelp({
-    description: 'show onetime configurations'
-})
-.withAction(function () {
+function controller() {
     var utils = require('../../utils');
     var config = require('../../config');
     var props = ['domain', 'email'];
@@ -24,4 +17,10 @@ module.exports = cli.command('onetime.config.show')
 
     showDomain('Harvest', 'harvest');
     showDomain('Target Process', 'tp');
+}
+
+require('dastoor').builder
+.terminal('onetime.config.show', controller)
+.help({
+    description: 'show onetime configurations'
 });
