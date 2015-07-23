@@ -32,6 +32,10 @@ function ensureConfig(module, path) {
 
 var runner = new Runner({
     errorLog: utils.log.err,
+    helpLog: function () {
+        var args = Array.prototype.slice.call(arguments);
+        utils.log.chalk.apply(utils, ['green'].concat(args));
+    },
     localArgs: config.locals
 });
 runner.onModuleLoad(ensureConfig);
