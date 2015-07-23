@@ -21,13 +21,6 @@ function controller(t) {
     base.selectTime(null, function (i) {
         return !i.running;
     }, function (selection) {
-        if(!selection){
-            utils.log();
-            utils.log.chalk('gray', 'no timer could be found.');
-            utils.log();
-            return;
-        }
-
         pause(selection[0]);
     });
 }

@@ -76,16 +76,7 @@ function controller(t) {
     if (!d && offset) d = new Date().addDays(-offset);
     base.selectTime(d, function (i) {
         return !i.finished;
-    }, function (selection) {
-        if(!selection){
-            utils.log();
-            utils.log.chalk('gray', 'no unfinished time could be found.');
-            utils.log();
-            return;
-        }
-
-        finishAll(selection);
-    }, t.all);
+    }, finishAll, t.all);
 }
 
 require('dastoor').builder

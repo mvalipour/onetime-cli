@@ -3,6 +3,7 @@ var utils = require('../../utils');
 var validation = require('../../utils/validation');
 var harvest = require('../../api/harvest')();
 var inquirer = require('inquirer');
+var chalk = require('chalk');
 
 function captureNewTime(args, tpClient, done) {
     var buildQuestions = function (args, data) {
@@ -112,7 +113,10 @@ function selectTime(date, filter, done, all) {
         }
 
         if(choices.length === 0){
-            return done();
+            utils.log();
+            utils.log.chalk('gray', 'no timers could be found for: ' + chalk.cyan(d.for_day));
+            utils.log();
+            return;
         }
 
         if(all){
