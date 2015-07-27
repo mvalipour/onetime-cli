@@ -12,10 +12,10 @@ var app = require('./commands');
 
 updateNotifier({pkg: require('../package.json')}).notify();
 
-function ensureConfig(module, path) {
+function ensureConfig(node, path) {
     if(config.isInitialized) return;
 
-    if(!module.terminal) return;
+    if(!node.terminal) return;
     if(path.isEqualTo(['init', 'harvest'])) return;
 
     utils.log();
@@ -38,5 +38,5 @@ var runner = new Runner({
     },
     localArgs: config.locals
 });
-runner.onModuleLoad(ensureConfig);
+runner.onNodeStarting(ensureConfig);
 runner.run(app, args);
