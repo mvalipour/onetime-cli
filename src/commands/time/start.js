@@ -39,7 +39,10 @@ function controller(args) {
 }
 
 require('dastoor').builder
-.terminal('onetime.time.start', controller)
+.node('onetime.time.start', {
+    terminal: true,
+    controller: controller
+})
 .help({
     description: 'start a timesheet',
     options: [{

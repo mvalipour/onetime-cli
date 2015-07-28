@@ -80,7 +80,10 @@ function controller(t) {
 }
 
 require('dastoor').builder
-.terminal('onetime.time.finish', controller)
+.node('onetime.time.finish', {
+    terminal: true,
+    controller: controller
+})
 .help({
     description: 'finish a timesheet',
     options: [{

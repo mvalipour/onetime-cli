@@ -3,7 +3,5 @@ require('./add');
 require('./remove');
 
 require('dastoor').builder
-.node('onetime.time.alias')
-.help({
-    description: 'manage your timesheet aliases',
-});
+    .node('onetime.time.alias')
+    .help('manage your timesheet aliases');

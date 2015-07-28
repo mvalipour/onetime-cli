@@ -73,3 +73,14 @@ Array.prototype.select = function (fields) {
         return res;
     });
 };
+
+Function.prototype.rebind = function (n) {
+    var me = this;
+
+    return function () {
+        var res = me.apply();
+        var f = res && res[n];
+        if(typeof f !== 'function') throw 'routed property was not a function.';
+        f.apply(null, arguments);
+    };
+};

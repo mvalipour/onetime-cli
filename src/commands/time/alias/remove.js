@@ -16,7 +16,8 @@ function controller(args) {
 }
 
 require('dastoor').builder
-.terminal('onetime.time.alias.remove', controller)
-.help({
-    description: 'remove an alias'
+.node('onetime.time.alias.remove', {
+    terminal: true,
+    controller: controller,
+    help: 'remove an alias'
 });

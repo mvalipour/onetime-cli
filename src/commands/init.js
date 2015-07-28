@@ -1,4 +1,4 @@
-var controllers = (function() {
+function controllers() {
     var inquirer = require('inquirer');
     var utils = require('../utils');
     var config = require('../config');
@@ -51,21 +51,15 @@ var controllers = (function() {
             });
         }
     };
-}());
+}
 
 var cli = require('dastoor').builder;
 
-cli.terminal('onetime.init.harvest', controllers.harvest)
-   .help({
-       description: 'initialize harvest'
-   });
-
-cli.terminal('onetime.init.tp', controllers.tp)
-   .help({
-       description: 'initialize target process'
-   });
-
 cli.node('onetime.init')
-   .help({
-        description: 'initialize onetime',
-    });
+    .help('initialize onetime');
+
+cli.node('onetime.init.harvest', controllers.rebind('harvest'))
+   .help('initialize harvest');
+
+cli.node('onetime.init.tp', controllers.rebind('tp'))
+   .help('initialize target process');

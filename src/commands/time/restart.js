@@ -27,7 +27,10 @@ function controller(t) {
 }
 
 require('dastoor').builder
-.terminal('onetime.time.restart', controller)
+.node('onetime.time.restart', {
+    terminal: true,
+    controller: controller
+})
 .help({
     description: 'restart a timesheet',
     options: [{

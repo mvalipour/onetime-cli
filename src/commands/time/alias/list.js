@@ -16,7 +16,8 @@ function controller(args) {
 }
 
 require('dastoor').builder
-.terminal('onetime.time.alias.list', controller)
-.help({
-    description: 'list aliases'
+.node('onetime.time.alias.list', {
+    terminal: true,
+    controller: controller,
+    help: 'list aliases'
 });

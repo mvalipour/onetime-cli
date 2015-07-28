@@ -31,7 +31,8 @@ function controller(args) {
 }
 
 require('dastoor').builder
-.terminal('onetime.time.alias.add', controller)
-.help({
-    description: 'add an alias'
+.node('onetime.time.alias.add', {
+    terminal: true,
+    controller: controller,
+    help: 'add an alias'
 });

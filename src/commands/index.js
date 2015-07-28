@@ -3,8 +3,10 @@ require('./project');
 require('./init');
 require('./time');
 
-module.exports = require('dastoor').builder
-.node('onetime')
-.help({
-    description: 'manage harvest and target-proess in one place',
+var cli = require('dastoor').builder;
+
+var onetime = cli.node('onetime', {
+    help: 'manage harvest and target-proess in one place'
 });
+
+module.exports = onetime;

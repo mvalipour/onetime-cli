@@ -16,7 +16,8 @@ function controller(t) {
 }
 
 require('dastoor').builder
-.terminal('onetime.time.pause', controller)
-.help({
-    description: 'pause a timesheet'
+.node('onetime.time.pause', {
+    terminal: true,
+    controller: controller,
+    help: 'pause a timesheet'
 });

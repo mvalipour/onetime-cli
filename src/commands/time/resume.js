@@ -26,7 +26,10 @@ function controller(t) {
 }
 
 require('dastoor').builder
-.terminal('onetime.time.resume', controller)
+.node('onetime.time.resume', {
+    terminal: true,
+    controller: controller
+})
 .help({
     description: 'continue a timesheet'
 });

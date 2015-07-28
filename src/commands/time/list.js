@@ -48,7 +48,10 @@ function controller(t) {
 }
 
 require('dastoor').builder
-.terminal('onetime.time.list', controller)
+.node('onetime.time.list', {
+    terminal: true,
+    controller: controller
+})
 .help({
     description: 'list a day timesheet',
     options: [
