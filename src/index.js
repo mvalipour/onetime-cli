@@ -12,11 +12,12 @@ var app = require('./commands');
 
 updateNotifier({pkg: require('../package.json')}).notify();
 
-function ensureConfig(node, path) {
+function ensureConfig(node) {
+
     if(config.isInitialized) return;
 
-    if(!node.terminal) return;
-    if(path.isEqualTo(['init', 'harvest'])) return;
+    if(!node.$controller) return;
+    if(node.path === 'onetime.init.harvest') return;
 
     utils.log();
     utils.log.err('onetime is not initialized.');
