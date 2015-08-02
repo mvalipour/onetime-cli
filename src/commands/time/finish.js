@@ -24,19 +24,28 @@ function controller(t) {
 
         utils.log('    Logging time on target process...');
 
-        var tpdata = {
-            description: e.notes || '-',
-            spent: e.hours,
-            remain: 0,// -- todo: capture from user
-            date: new Date(e.created_at).toJSON()
-        };
-        tp.addTime(e.tp_task.id, tpdata)
-            .then(function (a) {
-                utils.log('    ' + tpdata.spent + 'h is logged on target process against task #' + e.tp_task.id);
-                done();
-            }, function (err) {
-                utils.log.err(err);
+        tp.getTask(e.tp_task.id)
+        .then(function (tpTask) {
+            base.captureTimeRemaining(tpTask, function (remain) {
+
+                var tpdata = {
+                    description: e.notes || '-',
+                    spent: e.hours,
+                    remain: remain,
+                    date: new Date(e.created_at).toJSON()
+                };
+
+                tp.addTime(e.tp_task.id, tpdata)
+                    .then(function (a) {
+                        utils.log('    ' + tpdata.spent + 'h is logged on target process against task #' + e.tp_task.id);
+                        done();
+                    }, function (err) {
+                        utils.log.err(err);
+                    });
             });
+        }, function (err) {
+            utils.log.err('An error occured while fetching task from target process.' + err);
+        });
     }
 
     function finish(e, done) {
