@@ -1,16 +1,11 @@
-var command = require('../../utils/command');
+require('./list');
+require('./start');
+require('./pause');
+require('./resume');
+require('./finish');
+require('./restart');
+require('./alias');
 
-module.exports = command.dispatch([
-    'list',
-    'start',
-    'pause',
-    'resume',
-    'finish',
-    'restart',
-
-    'alias'
-], {
-    help: {
-        description: 'manage your timesheet',
-    }
-});
+require('dastoor').builder
+    .node('onetime.time')
+    .help('manage your timesheet');

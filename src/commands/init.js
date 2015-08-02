@@ -1,12 +1,4 @@
-var command = require('../utils/command');
-module.exports = command.dispatch([
-    'harvest',
-    'tp'
-], {
-    help: {
-        description: 'initialize onetime',
-    }
-}, function (m) {
+function controllers() {
     var inquirer = require('inquirer');
     var utils = require('../utils');
     var config = require('../config');
@@ -43,36 +35,31 @@ module.exports = command.dispatch([
         config.set(d + '_password', res.password);
     }
 
-
-    var apps = {
-        harvest: {
-            _: function () {
-                prompt('Harvest', function (opts) {
-                    store('harvest', opts);
-                    config.set('_initialized', true);
-                    utils.log('harvest is configured successfully.');
-                });
-            },
-            help: {
-                description: 'initialize harvest'
-            }
+    return {
+        harvest: function() {
+            prompt('Harvest', function (opts) {
+                store('harvest', opts);
+                config.set('_initialized', true);
+                utils.log('harvest is configured successfully.');
+            });
         },
-        tp: {
-            _: function () {
-                prompt('Target Process', function (opts) {
-                    store('tp', opts);
-                    utils.log('target process is configured successfully.');
-                });
-            },
-            help: {
-                description: 'initialize target process'
-            }
+
+        tp: function() {
+            prompt('Target Process', function (opts) {
+                store('tp', opts);
+                utils.log('target process is configured successfully.');
+            });
         }
     };
+}
 
-    var a = apps[m];
-    if(!a) return null;
+var cli = require('dastoor').builder;
 
-    a.$t = true;
-    return a;
-});
+cli.node('onetime.init')
+    .help('initialize onetime');
+
+cli.node('onetime.init.harvest', controllers.rebind('harvest'))
+   .help('initialize harvest');
+
+cli.node('onetime.init.tp', controllers.rebind('tp'))
+   .help('initialize target process');

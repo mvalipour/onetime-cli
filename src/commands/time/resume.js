@@ -1,39 +1,35 @@
-module.exports = {
-    $t: true,
-    help: {
-        description: 'continue a timesheet'
-    },
-    _: function (t) {
-        var utils = require('../../utils');
-        var harvest = require('../../api/harvest')();
-        var base = require('./_base');
+function controller(t) {
+    var utils = require('../../utils');
+    var harvest = require('../../api/harvest')();
+    var base = require('./_base');
 
-        function pause(e) {
-            if(e.running){
-                return utils.log.err('This timer is already running.');
-            }
-
-            if(e.tp_task && e.finished){
-                return utils.log.err('This timer is associated with a target-process task and is already finalized. consider adding it again.');
-            }
-
-            harvest.TimeTracking.toggleTimer({ id: e.id }, function (err) {
-                if(err) return utils.log.err(err);
-                utils.log('Your timer is running again.');
-            });
+    function pause(e) {
+        if(e.running){
+            return utils.log.err('This timer is already running.');
         }
 
-        base.selectTime(null, function (i) {
-            return !i.running;
-        }, function (selection) {
-            if(!selection){
-                utils.log();
-                utils.log.chalk('gray', 'no timer could be found.');
-                utils.log();
-                return;
-            }
+        if(e.tp_task && e.finished){
+            return utils.log.err('This timer is associated with a target-process task and is already finalized. consider adding it again.');
+        }
 
-            pause(selection[0]);
+        harvest.TimeTracking.toggleTimer({ id: e.id }, function (err) {
+            if(err) return utils.log.err(err);
+            utils.log('Your timer is running again.');
         });
     }
-};
+
+    base.selectTime(null, function (i) {
+        return !i.running;
+    }, function (selection) {
+        pause(selection[0]);
+    });
+}
+
+require('dastoor').builder
+.node('onetime.time.resume', {
+    terminal: true,
+    controller: controller
+})
+.help({
+    description: 'continue a timesheet'
+});

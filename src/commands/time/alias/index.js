@@ -1,11 +1,7 @@
-var command = require('../../../utils/command');
+require('./list');
+require('./add');
+require('./remove');
 
-module.exports = command.dispatch([
-    'list',
-    'add',
-    'remove'
-], {
-    help: {
-        description: 'manage your timesheet aliases',
-    }
-});
+require('dastoor').builder
+    .node('onetime.time.alias')
+    .help('manage your timesheet aliases');

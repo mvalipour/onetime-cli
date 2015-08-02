@@ -1,14 +1,12 @@
-var command = require('../utils/command');
-var utils = require('../utils');
-var config = require('../config');
+require('./config');
+require('./project');
+require('./init');
+require('./time');
 
-module.exports = command.dispatch([
-    'init',
-    'time',
-    'project',
-    'config'
-], {
-    help: {
-        description: 'manage harvest and target-proess in one place',
-    }
+var cli = require('dastoor').builder;
+
+var onetime = cli.node('onetime', {
+    help: 'manage harvest and target-proess in one place'
 });
+
+module.exports = onetime;

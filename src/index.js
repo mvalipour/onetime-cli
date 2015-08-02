@@ -5,18 +5,19 @@ var updateNotifier = require('update-notifier');
 
 var utils = require('./utils');
 var config = require('./config');
-var command = require('./utils/command');
+var Runner = require('dastoor').Runner;
 
 var args = process.argv.splice(2);
 var app = require('./commands');
 
 updateNotifier({pkg: require('../package.json')}).notify();
 
-function ensureConfig(path, module) {
+function ensureConfig(node) {
+
     if(config.isInitialized) return;
 
-    if(!module.$t) return;
-    if(path.isEqualTo(['init', 'harvest'])) return;
+    if(!node.$controller) return;
+    if(node.path === 'onetime.init.harvest') return;
 
     utils.log();
     utils.log.err('onetime is not initialized.');
@@ -30,5 +31,13 @@ function ensureConfig(path, module) {
     process.exit(0);
 }
 
-command.onStarting(ensureConfig);
-command.start(app, args);
+var runner = new Runner({
+    errorLog: utils.log.err,
+    helpLog: function () {
+        var args = Array.prototype.slice.call(arguments);
+        utils.log.chalk.apply(utils, ['green'].concat(args));
+    },
+    localArgs: config.locals
+});
+runner.onNodeStarting(ensureConfig);
+runner.run(app, args);
