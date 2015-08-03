@@ -164,6 +164,26 @@ function createTime(data) {
     });
 }
 
+function captureTimeRemaining(task, done) {
+    utils.log.chalk('green', '> User story: #', task.UserStory.Id, ':', task.UserStory.Name);
+    utils.log.chalk('green', '> Task: #' + task.Id, ':', task.Name);
+    utils.log.chalk('green', '> Projected remaining time:', task.TimeRemain);
+
+    var q = {
+        name: 'remaining',
+        validate: validation.time(false),
+        message: 'How many hours is remaining from this task?' ,
+        filter: function (i) {
+            return validation.convertTime(i) || task.TimeRemain;
+        }
+    };
+
+    inquirer.prompt([q], function (res) {
+        done(res.remaining);
+    });
+
+}
+
 function captureHourAndConfirm(args, done) {
     function buildQuestions(args) {
         var hours = 0;
@@ -171,7 +191,7 @@ function captureHourAndConfirm(args, done) {
             {
                 name: 'hours',
                 validate: validation.time(false),
-                message: 'How may hours have you already spent on it?',
+                message: 'How many hours have you already spent on it?',
                 when: !hours,
                 filter: function (i) {
                     return (hours = validation.convertTime(i) || 0);
@@ -202,5 +222,6 @@ module.exports = {
     selectTime: selectTime,
     createTime: createTime,
     createTpNote: createTpNote,
-    captureHourAndConfirm: captureHourAndConfirm
+    captureHourAndConfirm: captureHourAndConfirm,
+    captureTimeRemaining: captureTimeRemaining
 };
