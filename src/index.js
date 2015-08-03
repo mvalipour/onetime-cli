@@ -1,21 +1,29 @@
 #! /usr/bin/env node
 require('./utils/_ext');
 require('console.table');
-var updateNotifier = require('update-notifier');
-
 var utils = require('./utils');
+
+// update notifier
+var updateNotifier = require('update-notifier');
+updateNotifier({pkg: require('../package.json')}).notify();
+
+// handle escape key across the app
+require('keypress')(process.stdin);
+process.stdin.on('keypress', function (ch, key) {
+    if(key && key.name === 'escape') {
+        process.exit(0);
+    }
+});
+
+// start the cli app
 var config = require('./config');
 var Runner = require('dastoor').Runner;
 
 var args = process.argv.splice(2);
 var app = require('./commands');
 
-updateNotifier({pkg: require('../package.json')}).notify();
-
 function ensureConfig(node) {
-
     if(config.isInitialized) return;
-
     if(!node.$controller) return;
     if(node.path === 'onetime.init.harvest') return;
 
@@ -39,5 +47,6 @@ var runner = new Runner({
     },
     localArgs: config.locals
 });
+
 runner.onNodeStarting(ensureConfig);
 runner.run(app, args);
