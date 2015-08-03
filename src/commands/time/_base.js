@@ -164,17 +164,21 @@ function createTime(data) {
     });
 }
 
-function captureTimeRemaining(task, done) {
+function captureTimeRemaining(hours, task, done) {
+
+    var projected = (task.TimeRemain > hours ?
+                    task.TimeRemain - hours : 0).toFixed(2);
+
     utils.log.chalk('green', '> User story: #', task.UserStory.Id, ':', task.UserStory.Name);
     utils.log.chalk('green', '> Task: #' + task.Id, ':', task.Name);
-    utils.log.chalk('green', '> Projected remaining time:', task.TimeRemain);
+    utils.log.chalk('green', '> Projected remaining time:', projected);
 
     var q = {
         name: 'remaining',
         validate: validation.time(false),
         message: 'How many hours is remaining from this task?' ,
         filter: function (i) {
-            return validation.convertTime(i) || task.TimeRemain;
+            return validation.convertTime(i) || projected;
         }
     };
 

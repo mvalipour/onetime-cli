@@ -26,7 +26,7 @@ function controller(t) {
 
         tp.getTask(e.tp_task.id)
         .then(function (tpTask) {
-            base.captureTimeRemaining(tpTask, function (remain) {
+            base.captureTimeRemaining(e.hours, tpTask, function (remain) {
 
                 var tpdata = {
                     description: e.notes || '-',
