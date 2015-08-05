@@ -15,6 +15,8 @@ npm install -g onetime-cli
 onetime -h
 ```
 
+To expert using onetime see [the tutorial on our wiki](https://github.com/mvalipour/onetime-cli/wiki/Tutorial)
+
 ## Features
 
 - **Aliases**: You can define named aliases to make starting regular times easier.
