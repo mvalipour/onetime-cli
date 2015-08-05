@@ -1,7 +1,7 @@
 {
   "name": "onetime-cli",
   "version": "1.2.1",
-  "description": "a command line interface to manage harvest and target-proess in one place",
+  "description": "a command line interface to manage harvest and target-process in one place",
   "main": "src/index.js",
   "scripts": {
     "test": "mocha --recursive"

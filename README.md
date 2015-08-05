@@ -1,7 +1,7 @@
 # onetime-cli
 [![travis](https://travis-ci.org/mvalipour/onetime-cli.svg?branch=master)](https://travis-ci.org/mvalipour/onetime-cli)
 
-Manage harvest and target-proess in one place from command line.
+Manage harvest and target-process in one place from command line.
 
 ## Install
 
@@ -14,6 +14,8 @@ npm install -g onetime-cli
 ```
 onetime -h
 ```
+
+To expert using onetime see [the tutorial on our wiki](https://github.com/mvalipour/onetime-cli/wiki/Tutorial)
 
 ## Features
 
