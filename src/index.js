@@ -7,14 +7,6 @@ var utils = require('./utils');
 var updateNotifier = require('update-notifier');
 updateNotifier({pkg: require('../package.json')}).notify();
 
-// handle escape key across the app
-require('keypress')(process.stdin);
-process.stdin.on('keypress', function (ch, key) {
-    if(key && key.name === 'escape') {
-        process.exit(0);
-    }
-});
-
 // start the cli app
 var config = require('./config');
 var Runner = require('dastoor').Runner;
