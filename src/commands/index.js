@@ -6,13 +6,12 @@ require('./time');
 var utils = require('../utils');
 var cli = require('dastoor').builder;
 
-var version = require('../../package.json').version;
-var description = require('../../package.json').description;
+var info = require('../../package.json');
 
 var onetime = cli.node('onetime', {
     help: {
         description: [
-            description,
+            info.description,
             '',
             "                      .-.  _                ",
             "                     .' `.:_;               ",
@@ -20,7 +19,7 @@ var onetime = cli.node('onetime', {
             "    ' .; :: ,. :' '_.': : : :: ,. ,. :' '_.'",
             "    `.__.':_;:_;`.__.':_; :_;:_;:_;:_;`.__.'",
             '',
-            '    version ' + version
+            '    version ' + info.version
         ].join('\n'),
         options: [{
             name: '-v, --version', description: 'show onetime version'
@@ -29,7 +28,7 @@ var onetime = cli.node('onetime', {
     controller: function (args) {
         if(args.v || args.version){
             utils.log();
-            utils.log.chalk('green', '>   ' + version);
+            utils.log.chalk('green', '>   ' + info.version);
             utils.log();
         }
         else return 'h';
