@@ -7,11 +7,12 @@ var utils = require('../utils');
 var cli = require('dastoor').builder;
 
 var version = require('../../package.json').version;
+var description = require('../../package.json').description;
 
 var onetime = cli.node('onetime', {
     help: {
         description: [
-            'manage harvest and target-proess in one place',
+            description,
             '',
             "                      .-.  _                ",
             "                     .' `.:_;               ",
