@@ -178,7 +178,8 @@ function captureTimeRemaining(hours, task, done) {
         validate: validation.time(false),
         message: 'How many hours is remaining from this task?' ,
         filter: function (i) {
-            return validation.convertTime(i) || projected;
+            var t = validation.convertTime(i);
+            return t === 0 ? t : (t || projected);
         }
     };
 
