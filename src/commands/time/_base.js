@@ -82,7 +82,7 @@ function createTpNote(task, us) {
 ].join('\n');
 }
 
-function selectTime(date, filter, done, all) {
+function selectTime(date, filter, done, all, autoSelectSingle) {
     var opts = {};
     if(date) opts.date = new Date(date);
     harvest.TimeTracking.daily(opts, function (err, d) {
@@ -120,6 +120,10 @@ function selectTime(date, filter, done, all) {
         }
 
         if(all){
+            done(entries);
+        }
+        else if(autoSelectSingle && entries.length === 1){
+            utils.log.chalk('cyan', '❯ ' + output[0]);
             done(entries);
         }
         else {
