@@ -15,7 +15,7 @@ function controller(t) {
 
         harvest.TimeTracking.toggleTimer({ id: e.id }, function (err) {
             if(err) return utils.log.err(err);
-            utils.log('Your timer is running again.');
+            utils.log.succ('Your timer is running again.');
         });
     }
 

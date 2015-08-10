@@ -153,7 +153,7 @@ function createTime(data) {
     };
 
     function success() {
-        utils.log('Your time entry has been created.');
+        utils.log.succ('Your time entry has been created.');
     }
 
     harvest.TimeTracking.create(opts, function (err, res) {

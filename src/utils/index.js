@@ -18,6 +18,11 @@ log.err = function () {
     console.log.apply(this, args);
 };
 
+log.succ = function () {
+    var args = Array.prototype.slice.call(arguments);
+    console.log.call(this, chalk.green('✓ ' + args.join(' ')));
+};
+
 log.chalk = function (c) {
     var args = Array.prototype.slice.call(arguments).splice(1);
     console.log.call(this, chalk[c](args.join(' ')));

@@ -11,6 +11,7 @@ function controller(args) {
 
         store.remove(name, function (err) {
             if(err) return utils.log.err(err);
+            utils.log.succ('Your alias is removed successfully');
         });
     });
 }

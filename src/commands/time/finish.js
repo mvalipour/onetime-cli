@@ -9,7 +9,7 @@ function controller(t) {
             utils.log('    Stopping timer on harvest...');
             harvest.TimeTracking.toggleTimer({ id: e.id }, function (err) {
                 if(err) return utils.log.err(err);
-                utils.log('    Done.');
+                utils.log.succ('  Done.');
                 logTime(e, done);
             });
         }
@@ -52,7 +52,7 @@ function controller(t) {
         if(!e) return utils.log.err('No timer could be found.');
         if(e.finished) return utils.log.err('This time is already marked as finished.');
 
-        utils.log('finishing time:', e.id);
+        utils.log('❯ finishing time:', e.id);
         pauseAndLog(e, function () {
             if(!e.tp_task) {
                 utils.log('    Time is not associated with a target-process task.')
@@ -66,7 +66,7 @@ function controller(t) {
             };
             harvest.TimeTracking.update(model, function (err) {
                 if(err) return utils.log.err(err);
-                utils.log('    Done.');
+                utils.log.succ('  Done.');
                 done();
             });
         });

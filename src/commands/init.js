@@ -40,14 +40,14 @@ function controllers() {
             prompt('Harvest', function (opts) {
                 store('harvest', opts);
                 config.set('_initialized', true);
-                utils.log('harvest is configured successfully.');
+                utils.log.succ('harvest is configured successfully.');
             });
         },
 
         tp: function() {
             prompt('Target Process', function (opts) {
                 store('tp', opts);
-                utils.log('target process is configured successfully.');
+                utils.log.succ('target process is configured successfully.');
             });
         }
     };

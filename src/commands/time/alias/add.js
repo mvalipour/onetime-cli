@@ -24,6 +24,7 @@ function controller(args) {
             base.captureNewTime(args, tpClient, function (res) {
                 store.add(name, res, function (err) {
                     if(err) return utils.log.err(err);
+                    utils.log.succ('Your new alias is created successfully');
                 });
             });
         });
