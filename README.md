@@ -13,6 +13,8 @@ npm install -g onetime-cli
 
 ## Usage
 
+Type the following to get usage information:
+
 ```
 onetime -h
 ```
