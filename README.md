@@ -31,6 +31,8 @@ adding details over and over again.
 
 ## Contributing
 
+Found a bug or have an idea? [Open a new issue](https://github.com/mvalipour/onetime-cli/issues/new) and let's discuss it :)
+
 1. Fork it!
 2. Create your feature branch: `git checkout -b my-new-feature`
 3. Commit your changes: `git commit -am 'Add some feature'`
@@ -48,4 +50,4 @@ npm link
 
 Developed and maintained by [Mo Valipour](https://github.com/mvalipour).
 
-See license info [here](license.txt).
+See license info [here](https://github.com/mvalipour/onetime-cli/blob/master/license.txt).
