@@ -1,7 +1,7 @@
 # onetime-cli
 [![travis](https://travis-ci.org/mvalipour/onetime-cli.svg?branch=master)](https://travis-ci.org/mvalipour/onetime-cli)
 
-Manage harvest and target-process in one place from command line.
+A command line interface to manage harvest and target-process in one place.
 
 ![](http://www.reactiongifs.com/wp-content/uploads/2013/02/aaaand-send.gif)
 
