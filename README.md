@@ -27,11 +27,23 @@ To expert using onetime see [the tutorial on our wiki](https://github.com/mvalip
 - **Restart a time**: Restart one of your older timers with exact same details to avoid
 adding details over and over again.
 
-## Develop
+## Contributing
+
+1. Fork it!
+2. Create your feature branch: `git checkout -b my-new-feature`
+3. Commit your changes: `git commit -am 'Add some feature'`
+4. Push to the branch: `git push origin my-new-feature`
+5. Submit a pull request :D
+
+### Run the cli on development mode
 
 ```
-git clone https://github.com/mvalipour/onetime-cli.git
-cd onetime-cli
 npm install
 npm link
 ```
+
+## License
+
+Developed and maintained by [Mo Valipour](https://github.com/mvalipour).
+
+See license info [here](license.txt).
