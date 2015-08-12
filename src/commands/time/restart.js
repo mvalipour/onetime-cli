@@ -20,6 +20,7 @@ function controller(t) {
     if (!d && offset) d = new Date().addDays(-offset);
     base.selectTime(d, null, function (selection) {
         base.captureHourAndConfirm(t, function (data) {
+            if(!data.confirm) return;
             restart(selection[0], data);
         });
     });
