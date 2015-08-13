@@ -45,13 +45,38 @@ function controllers(args) {
                 'target process': list[k].tp.name
             });
             utils.log();
-            console.table(d);
+            if(d.length) console.table(d);
+            else utils.log('no mappings added yet');
+        });
+    }
+
+    function removeController() {
+        store.list(function (err, list) {
+            if(err) return utils.log.err(err);
+            var d = [];
+            for(var k in list) d.push({
+                value: k,
+                name: list[k].tp.name + ' --> ' + list[k].harvest.name
+            });
+            var q = {
+                type: 'list',
+                name: 'item',
+                choices: d,
+                message: 'Mapping:'
+            };
+            inquirer.prompt([q], function (res) {
+                store.remove(res.item, function (err) {
+                    if(err) return utils.log.err(err);
+                    utils.log.succ('Mapping removed successfully.');
+                });
+            });
         });
     }
 
     return {
         add: addController,
-        list: listController
+        list: listController,
+        remove: removeController
     };
 }
 
@@ -66,4 +91,10 @@ cli.node('onetime.project.map.list', {
     terminal: true,
     controller: controllers.rebind('list'),
     help: 'list harvest and target-process mappings'
+});
+
+cli.node('onetime.project.map.remove', {
+    terminal: true,
+    controller: controllers.rebind('remove'),
+    help: 'remove harvest and target-process mappings'
 });
