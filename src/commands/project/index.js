@@ -1,11 +1,13 @@
+require('./map');
+
 function listController(t) {
-    var utils = require('../utils');
-    var harvest = require('../api/harvest')();
+    var utils = require('../../utils');
+    var data = require('../../data');
 
-    harvest.TimeTracking.daily({}, function (err, d) {
-        if(err) utils.log(err);
+    data.getHarvestProjects(function (err, projects) {
+        if(err) return utils.log(err);
 
-        var projection = d.projects.select(['id', 'name']);
+        var projection = projects;
         console.table(projection);
     });
 }
