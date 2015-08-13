@@ -5,26 +5,25 @@ function controllers(args) {
     var store = require('../../data/map');
 
     function addController() {
-        data.getTPProjects(function (tpprojects) {
-            data.getHarvestProjects(function (err, hprojects) {
-                if(err) return utils.log(err);
-                var qq = [{
+        data.getHarvestProjects(function (err, hprojects) {
+            if(err) return utils.log(err);
+            data.getTPProjects(function (tpprojects) {
+                qq = [{
                     type: 'list',
-                    name: 'harvest',
-                    choices: hprojects.map(function (p) { return { name: p.name, value: p.id }; }),
-                    message: 'Harvest project:'
+                    name: 'tp',
+                    choices: tpprojects.map(function (p) { return { name: p.name, value: p.id }; }),
+                    message: 'Target-process project:'
                 }];
-                inquirer.prompt(qq, function (hres) {
-                    var hselected = hprojects.findBy('id', hres.harvest);
-
-                    qq = [{
+                inquirer.prompt(qq, function (res) {
+                    var tpselected = tpprojects.findBy('id', res.tp);
+                    var qq = [{
                         type: 'list',
-                        name: 'tp',
-                        choices: tpprojects.map(function (p) { return { name: p.name, value: p.id }; }),
-                        message: 'Target-process project:'
+                        name: 'harvest',
+                        choices: hprojects.map(function (p) { return { name: p.name, value: p.id }; }),
+                        message: 'Harvest project:'
                     }];
-                    inquirer.prompt(qq, function (hres) {
-                        var tpselected = tpprojects.findBy('id', hres.tp);
+                    inquirer.prompt(qq, function (res) {
+                        var hselected = hprojects.findBy('id', res.harvest);
                         store.add(tpselected.id, {
                             harvest: hselected,
                             tp: tpselected
@@ -41,8 +40,8 @@ function controllers(args) {
             if(err) return utils.log.err(err);
             var d = [];
             for(var k in list) d.push({
-                harvest: list[k].harvest.name,
-                'target process': list[k].tp.name
+                'target process': list[k].tp.name,
+                harvest: list[k].harvest.name
             });
             utils.log();
             if(d.length) console.table(d);
@@ -58,6 +57,7 @@ function controllers(args) {
                 value: k,
                 name: list[k].tp.name + ' --> ' + list[k].harvest.name
             });
+            if(d.length === 0) return utils.log('no mappings added yet');
             var q = {
                 type: 'list',
                 name: 'item',
