@@ -61,6 +61,12 @@ Array.prototype.select = function (fields) {
     });
 };
 
+Array.prototype.findBy = function (field, value) {
+    return this.filter(function (i) {
+        return i[field] === value;
+    })[0];
+};
+
 Function.prototype.rebind = function (n) {
     var me = this;
 
