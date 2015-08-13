@@ -39,7 +39,7 @@ function get(name, done) {
 
         var a = data[name];
         if(!a) {
-            return done('Alias `'+name+'` doesnot exist.');
+            return done('Mapping `'+name+'` doesnot exist.');
         }
 
         done(null, a);

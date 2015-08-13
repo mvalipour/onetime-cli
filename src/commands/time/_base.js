@@ -4,74 +4,91 @@ var validation = require('../../utils/validation');
 var harvest = require('../../api/harvest')();
 var inquirer = require('inquirer');
 var chalk = require('chalk');
+var mappings = require('../../data/map');
+var extend = require('extend');
 
 function captureNewTime(args, tpClient, done) {
-    var buildQuestions = function (args, data) {
+    harvest.TimeTracking.daily({ }, function (err, data) {
+        if(err) return utils.log.err(err);
+
         var projects = data.projects.map(function (p) {
             return { name: p.name, value: p.id};
         });
 
         var tpTask;
 
-        return [
-            {
-                type: 'list',
-                name: 'project',
-                choices: projects,
-                message: 'Which project?',
-                when: !args.project
-            },
-            {
-                type: 'list',
-                name: 'task',
-                choices: function (ctx) {
-                    var p = data.projects.filter(function (p) {
-                        return p.id === (ctx.project || args.project);
-                    })[0];
-                    if(!p) {
-                        utils.log.err('Project could not be found!');
-                        return process.exit(1);
-                    }
+        var tpq = {
+            name: 'tp',
+            validate: validation.number(false, function (i) {
+                var done = this.async();
+                tpClient.getTask(i)
+                .then(function (task) {
+                    tpTask = task;
 
-                    return p.tasks.map(function (t) {
-                        return { name: t.name, value: t.id };
-                    });
-                },
-                message: 'What kind of task?',
-                when: !args.task
-            },
-            {
-                name: 'tp',
-                validate: validation.number(false, function (i) {
-                    var done = this.async();
-                    tpClient.getTask(i)
-                    .then(function (task) {
-                        tpTask = task;
+                    // set project from mappings
+                    mappings.get(tpTask.Project.Id, function (err, m) {
+                        if(err) return done(err);
+                        if(m) {
+                            args.project = m.harvest.id;
+                        }
                         done(true);
-                    }, function (err) {
-                        done('An error occured while fetching task from target process.' + err);
                     });
-                }),
-                message: 'Any target process task? (id without #)',
-                when: !!tpClient && !args.tp,
-                filter: function (i) {
-                    if(!i) return i;
+                }, function (err) {
+                    done('An error occured while fetching task from target process.' + err);
+                });
+            }),
+            message: 'Any target process task? (id without #)',
+            when: !!tpClient && !args.tp,
+            filter: function (i) {
+                if(!i) return i;
 
-                    var task = { id: tpTask.Id, name: tpTask.Name };
-                    var us  = { id: tpTask.UserStory.Id, name: tpTask.UserStory.Name };
-                    return createTpNote(task, us);
-                }
-            },
-            {
-                name: 'notes',
-                message: 'Notes:'
+                var task = { id: tpTask.Id, name: tpTask.Name };
+                var us  = { id: tpTask.UserStory.Id, name: tpTask.UserStory.Name };
+                return createTpNote(task, us);
             }
-        ];
-    };
+        };
 
-    harvest.TimeTracking.daily({ }, function (err, data) {
-        if(err) return utils.log.err(err);
-        inquirer.prompt(buildQuestions(args, data), done);
+        function qq() {
+            return [
+                {
+                    type: 'list',
+                    name: 'project',
+                    choices: projects,
+                    message: 'Which project?',
+                    when: !args.project
+                },
+                {
+                    type: 'list',
+                    name: 'task',
+                    choices: function (ctx) {
+                        var p = data.projects.filter(function (p) {
+                            return p.id === (ctx.project || args.project);
+                        })[0];
+                        if(!p) {
+                            utils.log.err('Project could not be found!');
+                            return process.exit(1);
+                        }
+
+                        return p.tasks.map(function (t) {
+                            return { name: t.name, value: t.id };
+                        });
+                    },
+                    message: 'What kind of task?',
+                    when: !args.task
+                },
+                {
+                    name: 'notes',
+                    message: 'Notes:'
+                }
+            ];
+        }
+
+        inquirer.prompt([tpq], function (res1) {
+            inquirer.prompt(qq(), function (res) {
+                extend(res, res1);
+                done(res);
+            });
+        });
     });
 }
 
