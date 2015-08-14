@@ -38,10 +38,6 @@ function get(name, done) {
         if(err) return done(err);
 
         var a = data[name];
-        if(!a) {
-            return done('Mapping `'+name+'` doesnot exist.');
-        }
-
         done(null, a);
     });
 }
