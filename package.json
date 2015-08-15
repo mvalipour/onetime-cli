@@ -29,7 +29,7 @@
     "chalk": "^1.1.0",
     "configstore": "^1.2.0",
     "console.table": "^0.4.0",
-    "dastoor": "^0.1.0",
+    "dastoor": "^0.2.0",
     "extend": "^3.0.0",
     "harvest": "^0.1.0",
     "inquirer": "^0.8.5",

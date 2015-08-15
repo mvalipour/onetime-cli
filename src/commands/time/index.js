@@ -8,4 +8,7 @@ require('./alias');
 
 require('dastoor').builder
     .node('onetime.time')
-    .help('manage your timesheet');
+    .help('manage your timesheet')
+    .configure({
+        alias: 't'
+    });
