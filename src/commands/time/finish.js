@@ -24,7 +24,8 @@ function controller(t) {
 
         utils.log('    Logging time on target process...');
 
-        tp.getTask(e.tp_task.id)
+        var getter = e.tp_isBug ? tp.getBug : tp.getTask;
+        getter.call(tp, e.tp_task.id)
         .then(function (tpTask) {
             base.captureTimeRemaining(e.hours, tpTask, function (remain) {
 
@@ -36,12 +37,28 @@ function controller(t) {
                 };
 
                 tp.addTime(e.tp_task.id, tpdata)
-                    .then(function (a) {
-                        utils.log('    ' + tpdata.spent + 'h is logged on target process against task #' + e.tp_task.id);
-                        done();
-                    }, function (err) {
-                        utils.log.err(err);
-                    });
+                .then(function (a) {
+                    utils.log('    ' + tpdata.spent + 'h is logged on target process against task #' + e.tp_task.id);
+                    if(e.tp_isBug) {
+                        utils.log('    Logging bug time on the user story...');
+                        var tpusdata = {
+                            description: 'time spent on bug #' + e.tp_task.id,
+                            spent: e.hours,
+                            date: new Date(e.created_at).toJSON()
+                        };
+
+                        tp.addTime(e.tp_user_story.id, tpusdata)
+                        .then(function (a) {
+                            utils.log('    ' + tpdata.spent + 'h is logged on target process against user story #' + e.tp_user_story.id);
+                            done();
+                        }, function (err) {
+                            utils.log.err(err);
+                        });
+                    }
+                    else done();
+                }, function (err) {
+                    utils.log.err(err);
+                });
             });
         }, function (err) {
             utils.log.err('An error occured while fetching task from target process.' + err);
