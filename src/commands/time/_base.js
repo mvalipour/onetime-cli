@@ -34,7 +34,8 @@ function captureNewTime(args, tpClient, done) {
                         done(true);
                     });
                 }, function (err) {
-                    done('An error occured while fetching task from target process.' + err);
+                    done((err && err.response && err.response.Message) ||
+                    'An error occured while fetching task from target process.');
                 });
             }
 
