@@ -1,6 +1,7 @@
 var inquirer = require('inquirer');
 var utils = require('../../utils');
 var validation = require('../../utils/validation');
+var validator = require('validator');
 var harvest = require('../../api/harvest')();
 var inquirer = require('inquirer');
 var chalk = require('chalk');
@@ -15,13 +16,12 @@ function captureNewTime(args, tpClient, done) {
             return { name: p.name, value: p.id};
         });
 
-        var tpTask;
+        function promptTP(ready) {
+            if(!tpClient) return ready();
 
-        var tpq = {
-            name: 'tp',
-            validate: validation.number(false, function (i) {
-                var done = this.async();
-                tpClient.getTask(i)
+            var tpTask;
+            function prepare(id, done) {
+                tpClient.getTask(id)
                 .then(function (task) {
                     tpTask = task;
 
@@ -36,17 +36,44 @@ function captureNewTime(args, tpClient, done) {
                 }, function (err) {
                     done('An error occured while fetching task from target process.' + err);
                 });
-            }),
-            message: 'Any target process task? (id without #)',
-            when: !!tpClient && !args.tp,
-            filter: function (i) {
-                if(!i) return i;
+            }
+
+            function build() {
+                if(!tpTask) return undefined;
 
                 var task = { id: tpTask.Id, name: tpTask.Name };
                 var us  = { id: tpTask.UserStory.Id, name: tpTask.UserStory.Name };
                 return createTpNote(task, us);
             }
-        };
+
+            var tpq = {
+                name: 'tp',
+                validate: validation.number(false, function (i) {
+                    var done = this.async();
+                    prepare(i, done);
+                }),
+                message: 'Any target process task? (id without #)',
+                filter: build
+            };
+
+            function ask() {
+                inquirer.prompt(tpq, function (d) {
+                    ready(d.tp);
+                });
+            }
+
+            if(validator.isInt(args.tp)){
+                prepare(args.tp, function (res) {
+                    if(res === true) {
+                        var value = build();
+                        utils.log.chalk('cyan', value);
+                        ready(value);
+                    }
+                    else ask();
+                });
+            }
+            else ask();
+        }
 
         function qq() {
             return [
@@ -83,9 +110,9 @@ function captureNewTime(args, tpClient, done) {
             ];
         }
 
-        inquirer.prompt([tpq], function (res1) {
+        promptTP(function (tp) {
             inquirer.prompt(qq(), function (res) {
-                extend(res, res1);
+                res.tp = tp;
                 done(res);
             });
         });

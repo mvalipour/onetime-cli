@@ -17,7 +17,7 @@ function controller(args) {
         base.captureNewTime(args, tpClient, function (result) {
             base.captureHourAndConfirm(args, function (r2) {
                 var notes = [args.notes, result.notes].compact().join('\n');
-                extend(result, r2, args, { notes: notes });
+                result = extend({}, args, result, r2, { notes: notes });
                 if(!result.confirm) return;
                 base.createTime(result);
             });
