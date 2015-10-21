@@ -15,6 +15,8 @@ var TargetProcess = (function() {
         'Accept': 'application/json'
       }
     };
+
+    this.bugTimeBehavior = opts['bug-time'];
   }
 
   TargetProcess.prototype.build_ajax_options = function(uri, opts) {
@@ -123,6 +125,6 @@ var TargetProcess = (function() {
 
 module.exports = function () {
     var config = require('../config');
-    var settings = config.readDomain('tp', ['domain', 'email', 'password']);
+    var settings = config.readDomain('tp', true);
     return settings ? new TargetProcess(settings) : null;
 };

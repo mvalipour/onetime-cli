@@ -2,7 +2,7 @@ module.exports = function () {
     var config = require('../config');
     var Harvest = require('harvest');
 
-    var settings = config.readDomain('harvest', ['domain', 'email', 'password']);
+    var settings = config.readDomain('harvest', true);
 
     var result = new Harvest({
         subdomain: settings.domain,
