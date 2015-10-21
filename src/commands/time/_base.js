@@ -41,7 +41,9 @@ function captureNewTime(args, tpClient, done) {
                 if(!tpEntity) return undefined;
 
                 var task = { id: tpEntity.Id, name: tpEntity.Name, type: tpEntity.ResourceType.toLowerCase() };
-                var us  = { id: tpEntity.UserStory.Id, name: tpEntity.UserStory.Name };
+                var us  = tpEntity.UserStory ?
+                          { id: tpEntity.UserStory.Id, name: tpEntity.UserStory.Name } :
+                          null;
                 return createTpNote(task, us);
             }
 
@@ -119,10 +121,10 @@ function captureNewTime(args, tpClient, done) {
 }
 
 function createTpNote(task, us) {
-    if(!task || !us) return '';
-    return ['', '> user_story #' + us.id + ' ' + us.name,
-    '> '+task.type+' #' + task.id + ' ' + task.name
-].join('\n');
+    var parts = [''];
+    if(us) parts.push('> user_story #' + us.id + ' ' + us.name);
+    if(task) parts.push('> '+task.type+' #' + task.id + ' ' + task.name);
+    return parts.join('\n');
 }
 
 function selectTime(date, filter, done, all, autoSelectSingle) {
@@ -216,14 +218,16 @@ function captureTimeRemaining(hours, task, done) {
     var projected = (task.TimeRemain > hours ?
                     task.TimeRemain - hours : 0).toFixed(2);
 
-    utils.log.chalk('green', '> User story: #', task.UserStory.Id, ':', task.UserStory.Name);
+    if(task.UserStory){
+      utils.log.chalk('green', '> User story: #', task.UserStory.Id, ':', task.UserStory.Name);
+    }
     utils.log.chalk('green', '> '+task.ResourceType+': #' + task.Id, ':', task.Name);
     utils.log.chalk('green', '> Projected remaining time:', projected);
 
     var q = {
         name: 'remaining',
         validate: validation.time(false),
-        message: 'How many hours is remaining from this task/bug?' ,
+        message: 'How many hours is remaining from this '+task.ResourceType+'?' ,
         filter: function (i) {
             var t = validation.convertTime(i);
             return t === 0 ? t : (t || projected);
@@ -273,7 +277,7 @@ module.exports = {
     captureNewTime: captureNewTime,
     selectTime: selectTime,
     createTime: createTime,
-    createTpNote: createTpNote,
+    te: createTpNote,
     captureHourAndConfirm: captureHourAndConfirm,
     captureTimeRemaining: captureTimeRemaining
 };

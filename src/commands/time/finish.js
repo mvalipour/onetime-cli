@@ -24,7 +24,8 @@ function controller(t) {
 
         utils.log('    Logging time on target process...');
 
-        var getter = e.tp_isBug ? tp.getBug : tp.getTask;
+        var isBug = e.tp_task.type === 'bug';
+        var getter = isBug ? tp.getBug : tp.getTask;
         getter.call(tp, e.tp_task.id)
         .then(function (tpTask) {
             base.captureTimeRemaining(e.hours, tpTask, function (remain) {
@@ -38,8 +39,9 @@ function controller(t) {
 
                 tp.addTime(e.tp_task.id, tpdata)
                 .then(function (a) {
-                    utils.log('    ' + tpdata.spent + 'h is logged on target process against task #' + e.tp_task.id);
-                    if(e.tp_isBug) {
+                    utils.log('    ' + tpdata.spent + 'h is logged on target process against '+ e.tp_task.type +' #' + e.tp_task.id);
+                    if(isBug && tpTask.UserStory) {
+                        var userStoryId = tpTask.UserStory.Id;
                         utils.log('    Logging bug time on the user story...');
                         var tpusdata = {
                             description: 'time spent on bug #' + e.tp_task.id,
@@ -47,9 +49,9 @@ function controller(t) {
                             date: new Date(e.created_at).toJSON()
                         };
 
-                        tp.addTime(e.tp_user_story.id, tpusdata)
+                        tp.addTime(userStoryId, tpusdata)
                         .then(function (a) {
-                            utils.log('    ' + tpdata.spent + 'h is logged on target process against user story #' + e.tp_user_story.id);
+                            utils.log('    ' + tpdata.spent + 'h is logged on target process against user story #' + userStoryId);
                             done();
                         }, function (err) {
                             utils.log.err(err);

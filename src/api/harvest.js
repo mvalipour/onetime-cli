@@ -43,8 +43,8 @@ module.exports = function () {
                             var finished = l.trim() === prefixes.finishedPrefix;
 
                             if(us) e.tp_user_story = us;
-                            else if(task) e.tp_task = task;
-                            else if(bug) { e.tp_task = bug; e.tp_isBug = true; }
+                            else if(task) { e.tp_task = task; e.tp_task.type = 'task'; }
+                            else if(bug) { e.tp_task = bug; e.tp_task.type = 'bug'; }
                             else if(finished) e.finished = true;
                             else parts.push(l);
                         });
