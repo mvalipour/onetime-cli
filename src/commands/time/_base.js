@@ -277,7 +277,7 @@ module.exports = {
     captureNewTime: captureNewTime,
     selectTime: selectTime,
     createTime: createTime,
-    te: createTpNote,
+    createTpNote: createTpNote,
     captureHourAndConfirm: captureHourAndConfirm,
     captureTimeRemaining: captureTimeRemaining
 };
