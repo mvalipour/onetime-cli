@@ -38,7 +38,7 @@ function captureNewTime(args, tpClient, done) {
             }
 
             function build() {
-                if(!tpEntity) return undefined;
+                if(!tpEntity) return '';
 
                 var task = { id: tpEntity.Id, name: tpEntity.Name, type: tpEntity.ResourceType.toLowerCase() };
                 var us  = tpEntity.UserStory ?
