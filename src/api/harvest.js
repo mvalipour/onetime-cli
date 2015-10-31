@@ -2,7 +2,7 @@ module.exports = function () {
     var config = require('../config');
     var Harvest = require('harvest');
 
-    var settings = config.readDomain('harvest', ['domain', 'email', 'password']);
+    var settings = config.readDomain('harvest', true);
 
     var result = new Harvest({
         subdomain: settings.domain,
@@ -13,6 +13,7 @@ module.exports = function () {
     var prefixes = {
         userStoryPrefix: '> user_story #',
         taskPrefix: '> task #',
+        bugPrefix: '> bug #',
         finishedPrefix: '> finished'
     };
     result.prefixes = prefixes;
@@ -38,10 +39,12 @@ module.exports = function () {
                         e.notes.match(/[^\r\n]+/g).forEach(function (l) {
                             var us = extractId(l, prefixes.userStoryPrefix);
                             var task = extractId(l, prefixes.taskPrefix);
+                            var bug = extractId(l, prefixes.bugPrefix);
                             var finished = l.trim() === prefixes.finishedPrefix;
 
                             if(us) e.tp_user_story = us;
-                            else if(task) e.tp_task = task;
+                            else if(task) { e.tp_task = task; e.tp_task.type = 'task'; }
+                            else if(bug) { e.tp_task = bug; e.tp_task.type = 'bug'; }
                             else if(finished) e.finished = true;
                             else parts.push(l);
                         });

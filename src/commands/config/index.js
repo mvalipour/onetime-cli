@@ -1,8 +1,9 @@
+require('./set');
+
 function controllers() {
     var inquirer = require('inquirer');
-    var utils = require('../utils');
-    var config = require('../config');
-    var props = ['domain', 'email'];
+    var utils = require('../../utils');
+    var config = require('../../config');
 
     function clear() {
         utils.log();
@@ -23,14 +24,14 @@ function controllers() {
 
     function show() {
         function showDomain(name, key) {
-            var settings = config.readDomain(key, props);
+            var settings = config.readDomain(key);
             if(!settings) return;
 
             utils.log();
             utils.log('    ' + name);
-            props.forEach(function (p) {
+            for(var p in settings){
                 utils.log('      ' + utils.pad(p, 10) + settings[p]);
-            });
+            }
             utils.log();
         }
 

@@ -14,7 +14,7 @@ function controller(t) {
             });
         }
         else {
-            utils.log('    Time is already stopped.')
+            utils.log('    Time is already stopped.');
             logTime(e, done);
         }
     }
@@ -22,9 +22,21 @@ function controller(t) {
     function logTime(e, done) {
         if(!tp || !e.tp_task || !e.tp_task.id || !e.hours) return done();
 
-        utils.log('    Logging time on target process...');
+        var isBug = e.tp_task.type === 'bug';
 
-        tp.getTask(e.tp_task.id)
+        utils.log('    Logging time on target process...');
+        if(isBug) {
+          utils.log('    Bugs are configured to be logged against: ' + tp.bugTimeBehavior);
+        }
+
+        // configured to not log bug-time at all
+        if(isBug && tp.bugTimeBehavior === 'none') {
+          utils.log.chalk('red', '    System is configured NOT to log bug times AT ALL.');
+          return done();
+        }
+
+        var getter = isBug ? tp.getBug : tp.getTask;
+        getter.call(tp, e.tp_task.id)
         .then(function (tpTask) {
             base.captureTimeRemaining(e.hours, tpTask, function (remain) {
 
@@ -35,13 +47,58 @@ function controller(t) {
                     date: new Date(e.created_at).toJSON()
                 };
 
-                tp.addTime(e.tp_task.id, tpdata)
-                    .then(function (a) {
-                        utils.log('    ' + tpdata.spent + 'h is logged on target process against task #' + e.tp_task.id);
-                        done();
-                    }, function (err) {
-                        utils.log.err(err);
+                function logTime_us(cb) {
+                  // bugs may be without user-story
+                  if(!tpTask.UserStory) {
+                    utils.log.chalk('red', '    This '+tpTask.ResourceType+' is not associated with a user-story. -- ignored');
+                    return cb();
+                  }
+
+                  var userStoryId = tpTask.UserStory.Id;
+                  utils.log('    Logging bug time on the user story...');
+                  var tpusdata = {
+                      description: 'time spent on bug #' + e.tp_task.id,
+                      spent: e.hours,
+                      date: new Date(e.created_at).toJSON()
+                  };
+
+                  tp.addTime(userStoryId, tpusdata)
+                  .then(function () {
+                      utils.log('    ' + tpdata.spent + 'h is logged on target process against user story #' + userStoryId);
+                      cb();
+                  }, function (err) {
+                      utils.log.err(err);
+                  });
+                }
+
+                function logTime_task(cb) {
+                  tp.addTime(e.tp_task.id, tpdata)
+                  .then(function () {
+                      utils.log('    ' + tpdata.spent + 'h is logged on target process against '+ e.tp_task.type +' #' + e.tp_task.id);
+                      cb();
+                  }, function (err) {
+                      utils.log.err(err);
+                  });
+                }
+
+                // if not bug, time is always on task
+                if(!isBug) {
+                  return logTime_task(done);
+                }
+                else {
+                  if(tp.bugTimeBehavior === 'bug') {
+                    return logTime_task(done);
+                  }
+                  else if(tp.bugTimeBehavior === 'user-story') {
+                    return logTime_us(done);
+                  }
+                  else {
+                    // both
+                    return logTime_task(function () {
+                      return logTime_us(done);
                     });
+                  }
+                }
             });
         }, function (err) {
             utils.log.err('An error occured while fetching task from target process.' + err);
@@ -55,7 +112,7 @@ function controller(t) {
         utils.log('❯ finishing time:', e.id);
         pauseAndLog(e, function () {
             if(!e.tp_task) {
-                utils.log('    Time is not associated with a target-process task.')
+                utils.log('    Time is not associated with a target-process task.');
                 return done();
             }
 

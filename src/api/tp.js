@@ -15,6 +15,8 @@ var TargetProcess = (function() {
         'Accept': 'application/json'
       }
     };
+
+    this.bugTimeBehavior = opts['bug-time'];
   }
 
   TargetProcess.prototype.build_ajax_options = function(uri, opts) {
@@ -54,8 +56,38 @@ var TargetProcess = (function() {
     return request(ajax_opts);
   };
 
-  TargetProcess.prototype.getTask = function(taskId, ajax_opts) {
-    var url = this.full_url + '/Tasks/' + taskId;
+  TargetProcess.prototype.getTaskOrBug = function (id, done) {
+    function failure(err) {
+        done((err && err.response && err.response.Message) ||
+        'An error occured while fetching task from target process.');
+    }
+
+    function success(v) {
+        done(null, v);
+    }
+
+    var me = this;
+    me.getTask(id).then(success, function (err) {
+        if(err.statusCode === 404) {
+            me.getBug(id).then(success, function (err) {
+                if(err.statusCode === 404) {
+                    done('Task/Bug with Id '+id+' could not be found or access is forbidden.');
+                }
+                else failure(err);
+            });
+        }
+        else failure(err);
+    });
+  };
+
+  TargetProcess.prototype.getTask = function(id, ajax_opts) {
+    var url = this.full_url + '/Tasks/' + id;
+    ajax_opts = this.build_ajax_options(url, ajax_opts);
+    return request(ajax_opts);
+  };
+
+  TargetProcess.prototype.getBug = function(id, ajax_opts) {
+    var url = this.full_url + '/Bugs/' + id;
     ajax_opts = this.build_ajax_options(url, ajax_opts);
     return request(ajax_opts);
   };
@@ -93,6 +125,6 @@ var TargetProcess = (function() {
 
 module.exports = function () {
     var config = require('../config');
-    var settings = config.readDomain('tp', ['domain', 'email', 'password']);
+    var settings = config.readDomain('tp', true);
     return settings ? new TargetProcess(settings) : null;
 };

@@ -19,31 +19,31 @@ function captureNewTime(args, tpClient, done) {
         function promptTP(ready) {
             if(!tpClient) return ready();
 
-            var tpTask;
+            var tpEntity;
             function prepare(id, done) {
-                tpClient.getTask(id)
-                .then(function (task) {
-                    tpTask = task;
+                tpClient.getTaskOrBug(id, function (err, e) {
+                    if(err) return done(err);
+
+                    tpEntity = e;
 
                     // set project from mappings
-                    mappings.get(tpTask.Project.Id, function (err, m) {
+                    mappings.get(tpEntity.Project.Id, function (err, m) {
                         if(err) return done(err);
                         if(m) {
                             args.project = m.harvest.id;
                         }
                         done(true);
                     });
-                }, function (err) {
-                    done((err && err.response && err.response.Message) ||
-                    'An error occured while fetching task from target process.');
                 });
             }
 
             function build() {
-                if(!tpTask) return undefined;
+                if(!tpEntity) return '';
 
-                var task = { id: tpTask.Id, name: tpTask.Name };
-                var us  = { id: tpTask.UserStory.Id, name: tpTask.UserStory.Name };
+                var task = { id: tpEntity.Id, name: tpEntity.Name, type: tpEntity.ResourceType.toLowerCase() };
+                var us  = tpEntity.UserStory ?
+                          { id: tpEntity.UserStory.Id, name: tpEntity.UserStory.Name } :
+                          null;
                 return createTpNote(task, us);
             }
 
@@ -53,7 +53,7 @@ function captureNewTime(args, tpClient, done) {
                     var done = this.async();
                     prepare(i, done);
                 }),
-                message: 'Any target process task? (id without #)',
+                message: 'Any target process task/bug? (id without #)',
                 filter: build
             };
 
@@ -121,10 +121,10 @@ function captureNewTime(args, tpClient, done) {
 }
 
 function createTpNote(task, us) {
-    if(!task || !us) return '';
-    return ['', '> user_story #' + us.id + ' ' + us.name,
-    '> task #' + task.id + ' ' + task.name
-].join('\n');
+    var parts = [''];
+    if(us) parts.push('> user_story #' + us.id + ' ' + us.name);
+    if(task) parts.push('> '+task.type+' #' + task.id + ' ' + task.name);
+    return parts.join('\n');
 }
 
 function selectTime(date, filter, done, all, autoSelectSingle) {
@@ -218,14 +218,16 @@ function captureTimeRemaining(hours, task, done) {
     var projected = (task.TimeRemain > hours ?
                     task.TimeRemain - hours : 0).toFixed(2);
 
-    utils.log.chalk('green', '> User story: #', task.UserStory.Id, ':', task.UserStory.Name);
-    utils.log.chalk('green', '> Task: #' + task.Id, ':', task.Name);
+    if(task.UserStory){
+      utils.log.chalk('green', '> User story: #', task.UserStory.Id, ':', task.UserStory.Name);
+    }
+    utils.log.chalk('green', '> '+task.ResourceType+': #' + task.Id, ':', task.Name);
     utils.log.chalk('green', '> Projected remaining time:', projected);
 
     var q = {
         name: 'remaining',
         validate: validation.time(false),
-        message: 'How many hours is remaining from this task?' ,
+        message: 'How many hours is remaining from this '+task.ResourceType+'?' ,
         filter: function (i) {
             var t = validation.convertTime(i);
             return t === 0 ? t : (t || projected);
