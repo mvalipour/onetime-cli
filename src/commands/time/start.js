@@ -1,5 +1,6 @@
 function controller(args) {
     var extend = require('extend');
+    var moment = require('moment');
     var utils = require('../../utils');
     var inquirer = require('inquirer');
     var harvest = require('../../api/harvest')();
@@ -10,8 +11,26 @@ function controller(args) {
 
     function start(args) {
         if(args.p){
-            args.project = args.p;
-            delete args.p;
+          args.project = args.p;
+          delete args.p;
+        }
+
+        var offset = +(args.o || args.offset);
+        if(offset) {
+          delete args.o;
+          delete args.offset;
+          args.date = moment().add(-offset, 'day').toDate();
+        }
+
+        var d = args.d || args.date;
+        if(d) {
+          delete args.d;
+          delete args.date;
+          args.date = new Date(d);
+        }
+
+        if(args.date) {
+          utils.log.chalk('green', '> Date: ' + moment(args.date).format('DD MMMM YYYY'));
         }
 
         base.captureNewTime(args, tpClient, function (result) {

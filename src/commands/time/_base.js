@@ -194,7 +194,7 @@ function createTime(data) {
         hours: data.hours || 0,
         project_id: data.project,
         task_id: data.task,
-        spent_at: new Date()
+        spent_at: data.date || new Date()
     };
 
     function success() {
