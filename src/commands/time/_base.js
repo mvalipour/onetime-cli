@@ -9,9 +9,10 @@ var mappings = require('../../data/map');
 var extend = require('extend');
 
 function captureNewTime(args, tpClient, done) {
-    harvest.TimeTracking.daily({ }, function (err, data) {
+    harvest.getProjects(function (err, projects) {
         if(err) return utils.log.err(err);
 
+        var data = { projects: projects };
         var projects = data.projects.map(function (p) {
             return { name: p.name, value: p.id};
         });

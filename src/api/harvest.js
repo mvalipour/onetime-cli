@@ -69,7 +69,12 @@ module.exports = function () {
         };
     });
 
-    result.TimeTracking.daily = cache(result.TimeTracking.daily, 'harvest_TimeTracking_daily');
+    result.getProjects = cache(function (cb) {
+      result.TimeTracking.daily({}, function (err, res) {
+        if(err) return cb(err);
+        return cb(null, res.projects);
+      });
+    }, 'harvest_TimeTracking_getProjects');
 
     return result;
 };
