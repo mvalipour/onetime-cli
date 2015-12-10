@@ -18,6 +18,9 @@ if (!fs.existsSync(appdata)){
 }
 
 var properties = {
+  caching: [
+    { key: 'expiry-hours', default: '24' }
+  ],
   harvest: [
     'domain',
     'email',
@@ -57,12 +60,13 @@ module.exports = {
         for (var i = 0; i < props.length; i++) {
             var p = props[i];
             var k = typeof p === 'string' ? p : p.key;
-            var v = store.get(d + '_' + k) || p.default;
+            var v = store.get(d + '_' + k);
+            v = typeof v === 'undefined' ? p.default : v;
             if(p.protected && !includeProtected) {
               v = '********';
             }
 
-            if(v) res[k] = v;
+            if(typeof v !== 'undefined') res[k] = v;
             else return null;
         }
 

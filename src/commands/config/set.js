@@ -14,7 +14,7 @@ function controllers() {
       }
 
       var value = args._[1];
-      if(typeof value !== 'string') {
+      if(typeof value === 'undefined') {
         return utils.log.err('Please provide a <value>');
       }
 
@@ -34,9 +34,14 @@ function controllers() {
       baseController('harvest', args);
     }
 
+    function cachingController(args) {
+      baseController('caching', args);
+    }
+
     return {
       tp: tpController,
-      harvest: harvestController
+      harvest: harvestController,
+      caching: cachingController
     };
 }
 
@@ -65,6 +70,16 @@ cli.node('onetime.config.set.tp', {
     controller: controllers.rebind('tp'),
     help: {
       description: 'set a configuration setting for target-process',
+      options: options,
+      usage: usage,
+    },
+    terminal: true
+});
+
+cli.node('onetime.config.set.caching', {
+    controller: controllers.rebind('caching'),
+    help: {
+      description: 'set a configuration setting for caching',
       options: options,
       usage: usage,
     },

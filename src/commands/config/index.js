@@ -30,13 +30,14 @@ function controllers() {
             utils.log();
             utils.log('    ' + name);
             for(var p in settings){
-                utils.log('      ' + utils.pad(p, 10) + settings[p]);
+                utils.log('      ' + utils.pad(p, 16) + settings[p]);
             }
             utils.log();
         }
 
         showDomain('Harvest', 'harvest');
         showDomain('Target Process', 'tp');
+        showDomain('Caching', 'caching');
     }
 
     return {

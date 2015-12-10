@@ -1,5 +1,6 @@
 module.exports = function () {
     var config = require('../config');
+    var cache = require('../cache');
     var Harvest = require('harvest');
 
     var settings = config.readDomain('harvest', true);
@@ -67,6 +68,8 @@ module.exports = function () {
             baseClient[m].call(result, url, data, processResult(result, cb));
         };
     });
+
+    result.TimeTracking.daily = cache(result.TimeTracking.daily, 'harvest_TimeTracking_daily');
 
     return result;
 };
