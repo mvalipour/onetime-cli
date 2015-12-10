@@ -64,14 +64,20 @@ require('dastoor').builder
 })
 .help({
     description: 'start a timesheet',
-    options: [{
+    options: [
+      { name: '-d, --date', description: 'date of the timesheet. e.g. 2015-07-01' },
+      { name: '-o, --offset', description: 'date offset relative to today. e.g. 1 for yesterday' },
+      {
         name: '-p, --project',
         description: 'harvest project id'
-    }, {
+      },
+      {
         name: '--tp',
         description: 'target process task id'
-    }, {
+      },
+      {
         name: '-a, --alias',
         description: 'alias name to start the time with'
-    }]
+      }
+    ]
 });
