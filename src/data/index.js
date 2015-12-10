@@ -9,7 +9,7 @@ function getHarvestProjects(done) {
 
 function getTPProjects(done) {
     var client = require('../api/tp')();
-    client.getProjects().then(function (res) {
+    client.getProjects({ qs: { take: 100 } }).then(function (res) {
         done(res.Items.select(['Id', 'Name']).map(function (i) {
             return { name: i.Name, id: i.Id };
         }));
