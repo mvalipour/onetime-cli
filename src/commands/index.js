@@ -1,5 +1,6 @@
 require('./config');
 require('./project');
+require('./cache');
 require('./init');
 require('./time');
 

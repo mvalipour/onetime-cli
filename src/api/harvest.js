@@ -69,7 +69,7 @@ module.exports = function () {
         };
     });
 
-    result.getProjects = cache(function (cb) {
+    result.getProjects = cache.apply(function (cb) {
       result.TimeTracking.daily({}, function (err, res) {
         if(err) return cb(err);
         return cb(null, res.projects);
