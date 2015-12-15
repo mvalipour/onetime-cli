@@ -195,6 +195,7 @@ Prompt.prototype.onKeypress = function() {
   if(this.opt.choices.searchTerm === term) return;
 
   this.searchDirty = true;
+  this.selected = 0;
   this.opt.choices.searchTerm = term;
 
   this.rl.output.unmute();
