@@ -80,14 +80,15 @@ function captureNewTime(args, tpClient, done) {
         function qq() {
             return [
                 {
-                    type: 'list',
+                    type: 'searchable-list',
                     name: 'project',
                     choices: projects,
+                    choicesSearchable: true,
                     message: 'Which project?',
                     when: !args.project
                 },
                 {
-                    type: 'list',
+                    type: 'searchable-list',
                     name: 'task',
                     choices: function (ctx) {
                         var p = data.projects.filter(function (p) {
@@ -102,6 +103,7 @@ function captureNewTime(args, tpClient, done) {
                             return { name: t.name, value: t.id };
                         });
                     },
+                    choicesSearchable: true,
                     message: 'What kind of task?',
                     when: !args.task
                 },

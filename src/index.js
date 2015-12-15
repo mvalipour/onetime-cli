@@ -1,5 +1,7 @@
 #! /usr/bin/env node
 require('./utils/_ext');
+require('./inquirer-extensions');
+
 require('console.table');
 var utils = require('./utils');
 
