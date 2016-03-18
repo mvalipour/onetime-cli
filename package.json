@@ -1,6 +1,6 @@
 {
   "name": "onetime-cli",
-  "version": "1.10.2",
+  "version": "1.10.3",
   "description": "a command line interface to manage harvest and target-process in one place",
   "main": "src/index.js",
   "scripts": {
