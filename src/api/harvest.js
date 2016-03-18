@@ -2,6 +2,7 @@ module.exports = function () {
     var config = require('../config');
     var cache = require('../cache');
     var Harvest = require('harvest');
+    var entities = require('entities');
 
     var settings = config.readDomain('harvest', true);
 
@@ -38,6 +39,7 @@ module.exports = function () {
                         var parts = [];
                         var tp_user_story_id, tp_task_id;
                         e.notes.match(/[^\r\n]+/g).forEach(function (l) {
+                            l = entities.decodeHTML(l);
                             var us = extractId(l, prefixes.userStoryPrefix);
                             var task = extractId(l, prefixes.taskPrefix);
                             var bug = extractId(l, prefixes.bugPrefix);
