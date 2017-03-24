@@ -41,13 +41,11 @@ function captureNewTime(args, tpClient, done) {
                 if(!tpEntity) return '';
 
                 var task = { id: tpEntity.Id, name: tpEntity.Name, type: tpEntity.ResourceType.toLowerCase() };
-                var us;
+                var us = null;
                 if (tpEntity.ResourceType === 'UserStory') {
                     us = { id: tpEntity.Id, name: tpEntity.Name };
-                } else {
-                    us = tpEntity.UserStory ?
-                          { id: tpEntity.UserStory.Id, name: tpEntity.UserStory.Name } :
-                          null;
+                } else if (tpEntity.UserStory) {
+                    us = { id: tpEntity.UserStory.Id, name: tpEntity.UserStory.Name };
                 }
                 return createTpNote(task, us);
             }
