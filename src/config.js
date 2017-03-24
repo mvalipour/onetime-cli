@@ -30,7 +30,8 @@ var properties = {
     'domain',
     'email',
     { key: 'password', protected: true },
-    { key: 'bug-time', default: 'both', values: ['none', 'bug', 'user-story', 'both'] }
+    { key: 'bug-time', default: 'both', values: ['none', 'bug', 'user-story', 'both'] },
+    { key: 'story-time', default: 'false', values: ['true', 'false'] }
   ]
 };
 

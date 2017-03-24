@@ -17,6 +17,7 @@ var TargetProcess = (function() {
     };
 
     this.bugTimeBehavior = opts['bug-time'];
+    this.allowLoggingTimeToUserStories = opts['story-time'] === 'true';
   }
 
   TargetProcess.prototype.build_ajax_options = function(uri, opts) {
@@ -67,7 +68,12 @@ var TargetProcess = (function() {
     }
 
     var me = this;
-    me.getStory(id).then(success, function (err) {
+    me.getStory(id).then(function(result) {
+      if (!me.allowLoggingTimeToUserStories) {
+        done('Your config means that time cannot be logged directly onto user stories');
+      }
+      success(result);
+    }, function (err) {
       if (err.statusCode === 404) {
         me.getTask(id).then(success, function (err) {
             if(err.statusCode === 404) {
