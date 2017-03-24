@@ -56,7 +56,7 @@ var TargetProcess = (function() {
     return request(ajax_opts);
   };
 
-  TargetProcess.prototype.getTaskOrBug = function (id, done) {
+  TargetProcess.prototype.getStoryOrTaskOrBug = function (id, done) {
     function failure(err) {
         done((err && err.response && err.response.Message) ||
         'An error occured while fetching task from target process.');
@@ -67,18 +67,28 @@ var TargetProcess = (function() {
     }
 
     var me = this;
-    me.getTask(id).then(success, function (err) {
-        if(err.statusCode === 404) {
-            me.getBug(id).then(success, function (err) {
-                if(err.statusCode === 404) {
-                    done('Task/Bug with Id '+id+' could not be found or access is forbidden.');
-                }
-                else failure(err);
-            });
-        }
-        else failure(err);
+    me.getStory(id).then(success, function (err) {
+      if (err.statusCode === 404) {
+        me.getTask(id).then(success, function (err) {
+            if(err.statusCode === 404) {
+                me.getBug(id).then(success, function (err) {
+                    if(err.statusCode === 404) {
+                        done('Story/Task/Bug with Id '+id+' could not be found or access is forbidden.');
+                    }
+                    else failure(err);
+                });
+            }
+            else failure(err);
+        });
+      } else failure(err);
     });
   };
+
+  TargetProcess.prototype.getStory = function(id, ajax_opts) {
+    var url = this.full_url + '/Userstories/' + id;
+    ajax_opts = this.build_ajax_options(url, ajax_opts);
+    return request(ajax_opts);
+  }
 
   TargetProcess.prototype.getTask = function(id, ajax_opts) {
     var url = this.full_url + '/Tasks/' + id;

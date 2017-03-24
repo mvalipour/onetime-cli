@@ -20,9 +20,10 @@ function controller(t) {
     }
 
     function logTime(e, done) {
-        if(!tp || !e.tp_task || !e.tp_task.id || !e.hours) return done();
+        if(!tp || !(e.tp_task && e.tp_task.id) && !(e.tp_user_story && e.tp_user_story.id) || !e.hours) return done();
 
-        var isBug = e.tp_task.type === 'bug';
+        var isBug = e.tp_task && e.tp_task.type === 'bug';
+        var isTask = !isBug && e.tp_task;
 
         utils.log('    Logging time on target process...');
         if(isBug) {
@@ -35,8 +36,15 @@ function controller(t) {
           return done();
         }
 
-        var getter = isBug ? tp.getBug : tp.getTask;
-        getter.call(tp, e.tp_task.id)
+        var getter;
+        if (isBug) {
+            getter = tp.getBug;
+        } else if (isTask) {
+            getter = tp.getTask;
+        } else {
+            getter = tp.getStory;
+        }
+        getter.call(tp, e.tp_task ? e.tp_task.id : e.tp_user_story.id)
         .then(function (tpTask) {
             base.captureTimeRemaining(e.hours, tpTask, function (remain) {
 
@@ -49,18 +57,30 @@ function controller(t) {
 
                 function logTime_us(cb) {
                   // bugs may be without user-story
-                  if(!tpTask.UserStory) {
+                  var isUserStory = tpTask.ResourceType === 'UserStory';
+                  if(!isUserStory && !tpTask.UserStory) {
                     utils.log.chalk('red', '    This '+tpTask.ResourceType+' is not associated with a user-story. -- ignored');
                     return cb();
                   }
 
-                  var userStoryId = tpTask.UserStory.Id;
-                  utils.log('    Logging bug time on the user story...');
-                  var tpusdata = {
-                      description: 'time spent on bug #' + e.tp_task.id,
-                      spent: e.hours,
-                      date: new Date(e.created_at).toJSON()
-                  };
+                  var userStoryId = isUserStory ? tpTask.Id : tpTask.UserStory.Id;
+                  
+                  var tpusdata;
+                  if (isUserStory) {
+                    utils.log('    Logging time on the user story...');
+                    tpusdata = {
+                        description: 'time spent on user story #' + userStoryId,
+                        spent: e.hours,
+                        date: new Date(e.created_at).toJSON()
+                    };
+                  } else {
+                    utils.log('    Logging bug time on the user story...');
+                    tpusdata = {
+                        description: 'time spent on bug #' + e.tp_task.id,
+                        spent: e.hours,
+                        date: new Date(e.created_at).toJSON()
+                    };
+                  }
 
                   tp.addTime(userStoryId, tpusdata)
                   .then(function () {
@@ -82,10 +102,10 @@ function controller(t) {
                 }
 
                 // if not bug, time is always on task
-                if(!isBug) {
+                if(isTask) {
                   return logTime_task(done);
                 }
-                else {
+                else if (isBug) {
                   if(tp.bugTimeBehavior === 'bug') {
                     return logTime_task(done);
                   }
@@ -98,6 +118,8 @@ function controller(t) {
                       return logTime_us(done);
                     });
                   }
+                } else {
+                    return logTime_us(done);
                 }
             });
         }, function (err) {
@@ -111,7 +133,7 @@ function controller(t) {
 
         utils.log('❯ finishing time:', e.id);
         pauseAndLog(e, function () {
-            if(!e.tp_task) {
+            if(!e.tp_task && !e.tp_user_story) {
                 utils.log('    Time is not associated with a target-process task.');
                 return done();
             }

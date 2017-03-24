@@ -22,9 +22,8 @@ function captureNewTime(args, tpClient, done) {
 
             var tpEntity;
             function prepare(id, done) {
-                tpClient.getTaskOrBug(id, function (err, e) {
+                tpClient.getStoryOrTaskOrBug(id, function (err, e) {
                     if(err) return done(err);
-
                     tpEntity = e;
 
                     // set project from mappings
@@ -42,9 +41,14 @@ function captureNewTime(args, tpClient, done) {
                 if(!tpEntity) return '';
 
                 var task = { id: tpEntity.Id, name: tpEntity.Name, type: tpEntity.ResourceType.toLowerCase() };
-                var us  = tpEntity.UserStory ?
+                var us;
+                if (tpEntity.ResourceType === 'UserStory') {
+                    us = { id: tpEntity.Id, name: tpEntity.Name };
+                } else {
+                    us = tpEntity.UserStory ?
                           { id: tpEntity.UserStory.Id, name: tpEntity.UserStory.Name } :
                           null;
+                }
                 return createTpNote(task, us);
             }
 
@@ -54,7 +58,7 @@ function captureNewTime(args, tpClient, done) {
                     var done = this.async();
                     prepare(i, done);
                 }),
-                message: 'Any target process task/bug? (id without #)',
+                message: 'Any target process story/task/bug? (id without #)',
                 filter: build
             };
 
