@@ -68,26 +68,24 @@ var TargetProcess = (function() {
     }
 
     var me = this;
-    me.getStory(id).then(function(result) {
-      if (!me.allowLoggingTimeToUserStories) {
-        done('Your config means that time cannot be logged directly onto user stories');
-      }
-      success(result);
-    }, function (err) {
-      if (err.statusCode === 404) {
         me.getTask(id).then(success, function (err) {
             if(err.statusCode === 404) {
                 me.getBug(id).then(success, function (err) {
                     if(err.statusCode === 404) {
+                      me.getStory(id).then(function(result) {
+                        if (!me.allowLoggingTimeToUserStories) {
+                          done('Your config means that time cannot be logged directly onto user stories');
+                        }
+                        success(result);
+                      }, function (err) {
                         done('Story/Task/Bug with Id '+id+' could not be found or access is forbidden.');
+                      });
                     }
                     else failure(err);
                 });
             }
             else failure(err);
         });
-      } else failure(err);
-    });
   };
 
   TargetProcess.prototype.getStory = function(id, ajax_opts) {
