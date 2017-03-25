@@ -68,23 +68,22 @@ var TargetProcess = (function() {
     }
 
     var me = this;
-        me.getTask(id).then(success, function (err) {
-            if(err.statusCode === 404) {
-                me.getBug(id).then(success, function (err) {
-                    if(err.statusCode === 404) {
-                      me.getStory(id).then(function(result) {
-                        if (!me.allowLoggingTimeToUserStories) {
-                          done('Your config means that time cannot be logged directly onto user stories');
-                        }
-                        success(result);
-                      }, function (err) {
-                        done('Story/Task/Bug with Id '+id+' could not be found or access is forbidden.');
-                      });
-                    }
-                    else failure(err);
-                });
-            }
-            else failure(err);
+        me.getTask(id).catch(function (err) {
+          if (err.statusCode === 404) {
+            return me.getBug(id);
+          } else throw err;
+        }).catch(function (err) {
+          if (err.statusCode === 404) {
+            return me.getStory(id);
+          } else throw err;
+        }).then(function(result) {
+          if (result.ResourceType === 'UserStory' && !me.allowLoggingTimeToUserStories) {
+            done('Your config means that time cannot be logged directly onto user stories');
+          } else success(result);
+        }).catch(function (err) {
+          if (err.statusCode === 404) {
+            done('Story/Task/Bug with Id '+id+' could not be found or access is forbidden.');
+          } else failure(err);
         });
   };
 
