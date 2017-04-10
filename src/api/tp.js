@@ -17,6 +17,7 @@ var TargetProcess = (function() {
     };
 
     this.bugTimeBehavior = opts['bug-time'];
+    this.allowLoggingTimeToUserStories = opts['story-time'] === 'true';
   }
 
   TargetProcess.prototype.build_ajax_options = function(uri, opts) {
@@ -56,7 +57,7 @@ var TargetProcess = (function() {
     return request(ajax_opts);
   };
 
-  TargetProcess.prototype.getTaskOrBug = function (id, done) {
+  TargetProcess.prototype.getStoryOrTaskOrBug = function (id, done) {
     function failure(err) {
         done((err && err.response && err.response.Message) ||
         'An error occured while fetching task from target process.');
@@ -67,18 +68,30 @@ var TargetProcess = (function() {
     }
 
     var me = this;
-    me.getTask(id).then(success, function (err) {
-        if(err.statusCode === 404) {
-            me.getBug(id).then(success, function (err) {
-                if(err.statusCode === 404) {
-                    done('Task/Bug with Id '+id+' could not be found or access is forbidden.');
-                }
-                else failure(err);
-            });
-        }
-        else failure(err);
-    });
+        me.getTask(id).catch(function (err) {
+          if (err.statusCode === 404) {
+            return me.getBug(id);
+          } else throw err;
+        }).catch(function (err) {
+          if (err.statusCode === 404) {
+            return me.getStory(id);
+          } else throw err;
+        }).then(function(result) {
+          if (result.ResourceType === 'UserStory' && !me.allowLoggingTimeToUserStories) {
+            done('Your config means that time cannot be logged directly onto user stories');
+          } else success(result);
+        }).catch(function (err) {
+          if (err.statusCode === 404) {
+            done('Story/Task/Bug with Id '+id+' could not be found or access is forbidden.');
+          } else failure(err);
+        });
   };
+
+  TargetProcess.prototype.getStory = function(id, ajax_opts) {
+    var url = this.full_url + '/Userstories/' + id;
+    ajax_opts = this.build_ajax_options(url, ajax_opts);
+    return request(ajax_opts);
+  }
 
   TargetProcess.prototype.getTask = function(id, ajax_opts) {
     var url = this.full_url + '/Tasks/' + id;
