@@ -1,5 +1,4 @@
 var Configstore = require('configstore');
-var pkg = require('../package.json');
 var utils = require('./utils');
 var fs = require('fs');
 var jsonfile = require('jsonfile');
@@ -8,10 +7,10 @@ var localFilename = process.env.PWD + '/.onetime';
 var locals = fs.existsSync(localFilename) && jsonfile.readFileSync(localFilename);
 locals = locals || {};
 
-var store = new Configstore(pkg.name);
+var store = new Configstore('onetime-cli');
 
 var appdata = process.env.APPDATA || (process.platform == 'darwin' ? process.env.HOME + '/Library/Application Support' : '/var/local');
-appdata += '/' + pkg.name;
+appdata += '/onetime-cli';
 
 if (!fs.existsSync(appdata)){
     fs.mkdirSync(appdata);
