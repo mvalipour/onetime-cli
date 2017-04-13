@@ -7,9 +7,11 @@ A command line interface to manage harvest and target-process in one place.
 
 ## Install
 
-```
-npm install -g onetime-cli
-```
+You need to set up your MyGet authentication and then install the package.
+
+1. Run `npm adduser --registry=https://www.myget.org/F/neworbit/npm/` and follow the prompts (use your MyGet authentication)
+2. Run `npm config set @neworbit:always-auth true`
+3. Run `npm install -g @neworbit/onetime-cli`
 
 ## Usage
 

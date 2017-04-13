@@ -1,6 +1,6 @@
 {
-  "name": "onetime-cli",
-  "version": "1.10.3",
+  "name": "@neworbit/onetime-cli",
+  "version": "1.0.0",
   "description": "a command line interface to manage harvest and target-process in one place",
   "main": "src/index.js",
   "scripts": {
